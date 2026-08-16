@@ -1,19 +1,31 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { useCustomer } from "@/components/providers/CustomerContext"
-import { ArrowLeft, Check } from "@/components/ui/Icons"
+import { ArrowLeft, Check, User } from "@/components/ui/Icons"
+import { EmptyState } from "@/components/ui/EmptyState"
 
 export default function ProfileSettingsPage() {
-  const { customer, updateProfile } = useCustomer()
+  const { customer, updateProfile, isLoaded } = useCustomer()
 
   const [formData, setFormData] = useState({
-    firstName: customer?.firstName || "Aditya",
-    lastName: customer?.lastName || "Sharma",
-    email: customer?.email || "aditya.sharma@example.com",
-    phone: customer?.phone || "+91 98765 43210",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
   })
+
+  useEffect(() => {
+    if (customer) {
+      setFormData({
+        firstName: customer.firstName || "",
+        lastName: customer.lastName || "",
+        email: customer.email || "",
+        phone: customer.phone || "",
+      })
+    }
+  }, [customer])
 
   const [isSaved, setIsSaved] = useState(false)
 
@@ -22,6 +34,20 @@ export default function ProfileSettingsPage() {
     updateProfile(formData)
     setIsSaved(true)
     setTimeout(() => setIsSaved(false), 2500)
+  }
+
+  if (isLoaded && !customer) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4">
+        <EmptyState
+          icon={<User className="h-12 w-12 text-zinc-600" />}
+          title="Sign In Required"
+          description="Please sign in to view and edit your profile settings."
+          actionLabel="Sign In"
+          actionHref="/login"
+        />
+      </div>
+    )
   }
 
   return (

@@ -4,12 +4,26 @@ import React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useCustomer } from "@/components/providers/CustomerContext"
-import { ArrowLeft, Truck, Package } from "@/components/ui/Icons"
+import { ArrowLeft, Truck, Package, User } from "@/components/ui/Icons"
 import { formatPrice, formatDate } from "@/lib/formatters"
 import { EmptyState } from "@/components/ui/EmptyState"
 
 export default function OrdersHistoryPage() {
-  const { orders } = useCustomer()
+  const { customer, orders, isLoaded } = useCustomer()
+
+  if (isLoaded && !customer) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4">
+        <EmptyState
+          icon={<User className="h-12 w-12 text-zinc-600" />}
+          title="Sign In Required"
+          description="Please sign in to your VIP account to view your order history and live parcel tracking."
+          actionLabel="Sign In"
+          actionHref="/login"
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 space-y-8">

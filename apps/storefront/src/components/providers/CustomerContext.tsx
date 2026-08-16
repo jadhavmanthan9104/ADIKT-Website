@@ -45,6 +45,7 @@ export interface CustomerProfile {
 export interface CustomerContextType {
   customer: CustomerProfile | null
   isAuthenticated: boolean
+  isLoaded: boolean
   addresses: CustomerAddress[]
   orders: CustomerOrder[]
   login: (email: string, password?: string) => Promise<boolean>
@@ -56,7 +57,7 @@ export interface CustomerContextType {
   setDefaultAddress: (id: string) => void
 }
 
-const DEFAULT_CUSTOMER: CustomerProfile = {
+const DEFAULT_DEMO_CUSTOMER: CustomerProfile = {
   id: "cus_01JADIKT0928374",
   email: "aditya.sharma@example.com",
   firstName: "Aditya",
@@ -144,25 +145,62 @@ const INITIAL_ORDERS: CustomerOrder[] = [
 const CustomerContext = createContext<CustomerContextType | undefined>(undefined)
 
 export function CustomerProvider({ children }: { children: React.ReactNode }) {
-  const [customer, setCustomer] = useState<CustomerProfile | null>(DEFAULT_CUSTOMER)
+  const [customer, setCustomer] = useState<CustomerProfile | null>(null)
   const [addresses, setAddresses] = useState<CustomerAddress[]>(INITIAL_ADDRESSES)
   const [orders, setOrders] = useState<CustomerOrder[]>(INITIAL_ORDERS)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  // Initialize session from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("adikt_customer_session")
+      if (stored) {
+        setCustomer(JSON.parse(stored))
+      } else {
+        // Default initial session for demo experience
+        setCustomer(DEFAULT_DEMO_CUSTOMER)
+        localStorage.setItem("adikt_customer_session", JSON.stringify(DEFAULT_DEMO_CUSTOMER))
+      }
+    } catch (e) {
+      setCustomer(DEFAULT_DEMO_CUSTOMER)
+    } finally {
+      setIsLoaded(true)
+    }
+  }, [])
 
   const login = async (email: string): Promise<boolean> => {
-    setCustomer({
-      ...DEFAULT_CUSTOMER,
-      email,
-    })
+    const profile: CustomerProfile = {
+      ...DEFAULT_DEMO_CUSTOMER,
+      email: email.trim(),
+      firstName: email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1),
+    }
+    setCustomer(profile)
+    try {
+      localStorage.setItem("adikt_customer_session", JSON.stringify(profile))
+    } catch (e) {
+      // ignore
+    }
     return true
   }
 
   const logout = () => {
     setCustomer(null)
+    try {
+      localStorage.removeItem("adikt_customer_session")
+    } catch (e) {
+      // ignore
+    }
   }
 
   const updateProfile = async (data: Partial<CustomerProfile>): Promise<boolean> => {
     if (customer) {
-      setCustomer({ ...customer, ...data })
+      const updated = { ...customer, ...data }
+      setCustomer(updated)
+      try {
+        localStorage.setItem("adikt_customer_session", JSON.stringify(updated))
+      } catch (e) {
+        // ignore
+      }
     }
     return true
   }
@@ -199,6 +237,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
       value={{
         customer,
         isAuthenticated: !!customer,
+        isLoaded,
         addresses,
         orders,
         login,

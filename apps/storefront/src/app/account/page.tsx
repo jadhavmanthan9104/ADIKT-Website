@@ -2,14 +2,36 @@
 
 import React from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useCustomer } from "@/components/providers/CustomerContext"
 import { useWishlist } from "@/components/providers/WishlistContext"
 import { Package, User, MapPin, Heart, ArrowRight, Truck } from "@/components/ui/Icons"
 import { formatPrice, formatDate } from "@/lib/formatters"
+import { EmptyState } from "@/components/ui/EmptyState"
 
 export default function AccountDashboardPage() {
-  const { customer, orders, addresses, logout } = useCustomer()
+  const router = useRouter()
+  const { customer, orders, addresses, logout, isLoaded } = useCustomer()
   const { wishlistCount } = useWishlist()
+
+  const handleSignOut = () => {
+    logout()
+    router.push("/login")
+  }
+
+  if (isLoaded && !customer) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4">
+        <EmptyState
+          icon={<User className="h-12 w-12 text-zinc-600" />}
+          title="You Are Signed Out"
+          description="Sign in to your VIP account to view your order history, track shipments, and manage saved delivery addresses."
+          actionLabel="Sign In To Account"
+          actionHref="/login"
+        />
+      </div>
+    )
+  }
 
   const recentOrder = orders[0]
   const defaultAddress = addresses.find((a) => a.isDefault) || addresses[0]
@@ -21,14 +43,14 @@ export default function AccountDashboardPage() {
         <div className="space-y-1">
           <span className="text-xs font-bold uppercase tracking-widest text-accent">VIP Member</span>
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white font-display">
-            Welcome Back, {customer?.firstName || "Aditya"}
+            Welcome Back, {customer?.firstName || "Customer"}
           </h1>
-          <p className="text-xs text-zinc-400">{customer?.email || "aditya.sharma@example.com"}</p>
+          <p className="text-xs text-zinc-400">{customer?.email}</p>
         </div>
 
         <button
-          onClick={logout}
-          className="self-start sm:self-auto px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold uppercase rounded-lg text-zinc-300 hover:text-white"
+          onClick={handleSignOut}
+          className="self-start sm:self-auto px-4 py-2 bg-zinc-900 hover:bg-red-950/40 hover:border-red-800/60 border border-zinc-800 text-xs font-bold uppercase rounded-lg text-zinc-300 hover:text-red-400 transition-colors"
         >
           Sign Out
         </button>

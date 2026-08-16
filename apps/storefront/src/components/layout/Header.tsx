@@ -17,7 +17,7 @@ export function Header() {
   const router = useRouter()
   const { openDrawer, itemCount } = useCart()
   const { wishlistCount } = useWishlist()
-  const { isAuthenticated } = useCustomer()
+  const { isAuthenticated, logout } = useCustomer()
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -194,20 +194,35 @@ export function Header() {
           </Link>
 
           <div className="pt-4 border-t border-zinc-800 grid grid-cols-2 gap-2 text-xs font-bold uppercase">
-            <Link
-              href={isAuthenticated ? "/account" : "/login"}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2.5 px-3 rounded-lg bg-zinc-900 text-center text-white"
-            >
-              {isAuthenticated ? "My Account" : "Sign In"}
-            </Link>
-            <Link
-              href="/account/wishlist"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2.5 px-3 rounded-lg bg-zinc-900 text-center text-white"
-            >
-              Wishlist ({wishlistCount})
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/account"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="py-2.5 px-3 rounded-lg bg-zinc-900 text-center text-white hover:bg-zinc-800"
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={() => {
+                    logout()
+                    setIsMobileMenuOpen(false)
+                    router.push("/login")
+                  }}
+                  className="py-2.5 px-3 rounded-lg bg-zinc-900 border border-zinc-800 text-center text-red-400 font-bold hover:bg-red-950/30"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-lg bg-zinc-900 text-center text-white col-span-2 hover:bg-zinc-800"
+              >
+                Sign In / Register
+              </Link>
+            )}
           </div>
         </div>
       )}

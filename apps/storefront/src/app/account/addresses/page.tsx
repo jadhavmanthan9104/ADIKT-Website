@@ -3,10 +3,11 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { useCustomer, CustomerAddress } from "@/components/providers/CustomerContext"
-import { ArrowLeft, Plus, Trash2, MapPin, Check } from "@/components/ui/Icons"
+import { ArrowLeft, Plus, Trash2, MapPin, Check, User } from "@/components/ui/Icons"
+import { EmptyState } from "@/components/ui/EmptyState"
 
 export default function AddressesPage() {
-  const { addresses, addAddress, deleteAddress, setDefaultAddress } = useCustomer()
+  const { customer, addresses, addAddress, deleteAddress, setDefaultAddress, isLoaded } = useCustomer()
 
   const [isAdding, setIsAdding] = useState(false)
   const [newAddr, setNewAddr] = useState<Omit<CustomerAddress, "id">>({
@@ -36,6 +37,20 @@ export default function AddressesPage() {
         isDefault: false,
       })
     }
+  }
+
+  if (isLoaded && !customer) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-4">
+        <EmptyState
+          icon={<User className="h-12 w-12 text-zinc-600" />}
+          title="Sign In Required"
+          description="Please sign in to manage your saved Indian delivery addresses and default shipping destinations."
+          actionLabel="Sign In"
+          actionHref="/login"
+        />
+      </div>
+    )
   }
 
   return (
