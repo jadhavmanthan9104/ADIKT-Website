@@ -24,7 +24,7 @@ export function Footer() {
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-1">
             <span className="text-xs font-bold uppercase tracking-widest text-accent">
-              VIP Drop Access
+              Early Drop Access
             </span>
             <h3 className="text-xl font-bold uppercase text-white font-display">
               Be First To Access 400 GSM Drops & Archival Releases
@@ -37,7 +37,7 @@ export function Footer() {
           <form onSubmit={handleNewsletter} className="flex gap-2 w-full md:w-auto">
             {subscribed ? (
               <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-500/20 text-green-400 text-xs font-bold uppercase">
-                <Check className="h-4 w-4" /> You&apos;re on the VIP list
+                <Check className="h-4 w-4" /> You&apos;re on the exclusive list
               </div>
             ) : (
               <>

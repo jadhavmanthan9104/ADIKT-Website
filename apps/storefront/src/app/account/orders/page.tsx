@@ -17,7 +17,7 @@ export default function OrdersHistoryPage() {
         <EmptyState
           icon={<User className="h-12 w-12 text-zinc-600" />}
           title="Sign In Required"
-          description="Please sign in to your VIP account to view your order history and live parcel tracking."
+          description="Please sign in to your account to view your order history and live parcel tracking."
           actionLabel="Sign In"
           actionHref="/login"
         />

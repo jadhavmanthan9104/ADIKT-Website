@@ -35,12 +35,12 @@ function LoginContent() {
   return (
     <div className="max-w-md mx-auto px-4 py-16 sm:py-24 space-y-8">
       <div className="text-center space-y-2">
-        <span className="text-xs font-bold uppercase tracking-widest text-accent">VIP Access</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-accent">Member Access</span>
         <h1 className="text-3xl font-black uppercase tracking-tight text-white font-display">
           Customer Sign In
         </h1>
         <p className="text-xs text-zinc-400">
-          Access your orders, saved addresses, and VIP drop allocations
+          Access your orders, saved addresses, and exclusive drop allocations
         </p>
       </div>
 
@@ -97,7 +97,7 @@ function LoginContent() {
         <div className="text-center pt-4 border-t border-zinc-800 text-xs text-zinc-400">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-white font-bold hover:underline">
-            Create VIP Account
+            Create Account
           </Link>
         </div>
       </form>

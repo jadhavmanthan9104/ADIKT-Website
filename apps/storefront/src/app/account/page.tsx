@@ -25,7 +25,7 @@ export default function AccountDashboardPage() {
         <EmptyState
           icon={<User className="h-12 w-12 text-zinc-600" />}
           title="You Are Signed Out"
-          description="Sign in to your VIP account to view your order history, track shipments, and manage saved delivery addresses."
+          description="Sign in to your account to view your order history, track shipments, and manage saved delivery addresses."
           actionLabel="Sign In To Account"
           actionHref="/login"
         />
@@ -41,7 +41,7 @@ export default function AccountDashboardPage() {
       {/* Welcome Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div className="space-y-1">
-          <span className="text-xs font-bold uppercase tracking-widest text-accent">VIP Member</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-accent">Member</span>
           <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white font-display">
             Welcome Back, {customer?.firstName || "Customer"}
           </h1>

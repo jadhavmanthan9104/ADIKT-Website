@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
         <div className="space-y-3">
           <h2 className="text-base font-bold text-white uppercase">1. Information We Collect</h2>
           <p className="text-zinc-400">
-            We collect information you provide directly to us when creating a VIP account, placing an order, subscribing to drop alerts, or contacting our concierge:
+            We collect information you provide directly to us when creating an account, placing an order, subscribing to drop alerts, or contacting our concierge:
           </p>
           <ul className="list-disc list-inside space-y-1 text-zinc-400">
             <li>Contact Information: Full name, delivery address, email address, and 10-digit mobile number.</li>

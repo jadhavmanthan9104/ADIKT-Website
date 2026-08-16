@@ -40,7 +40,7 @@ function ResetPasswordContent() {
           Set New Password
         </h1>
         <p className="text-xs text-zinc-400">
-          Create a new strong password for your VIP account
+          Create a new strong password for your account
         </p>
       </div>
 

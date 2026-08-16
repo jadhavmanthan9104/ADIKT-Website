@@ -39,9 +39,9 @@ export default function RegisterPage() {
   return (
     <div className="max-w-md mx-auto px-4 py-16 sm:py-24 space-y-8">
       <div className="text-center space-y-2">
-        <span className="text-xs font-bold uppercase tracking-widest text-accent">VIP Membership</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-accent">Member Access</span>
         <h1 className="text-3xl font-black uppercase tracking-tight text-white font-display">
-          Create VIP Account
+          Create Account
         </h1>
         <p className="text-xs text-zinc-400">
           Get exclusive early drop access, order tracking, and 10% off with code WELCOME10
@@ -133,7 +133,7 @@ export default function RegisterPage() {
           disabled={loading}
           className="w-full py-3.5 bg-white hover:bg-zinc-200 text-black font-extrabold uppercase rounded-lg text-xs tracking-wider flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
         >
-          {loading ? "Creating Account..." : "Join VIP Member Club"} <ArrowRight className="h-4 w-4" />
+          {loading ? "Creating Account..." : "Create Account"} <ArrowRight className="h-4 w-4" />
         </button>
 
         <div className="text-center pt-4 border-t border-zinc-800 text-xs text-zinc-400">

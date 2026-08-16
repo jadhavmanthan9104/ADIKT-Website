@@ -22,7 +22,7 @@ export default function OrderDetailsPage({
         <EmptyState
           icon={<User className="h-12 w-12 text-zinc-600" />}
           title="Sign In Required"
-          description="Please sign in to your VIP account to view this order."
+          description="Please sign in to your account to view this order."
           actionLabel="Sign In"
           actionHref="/login"
         />
