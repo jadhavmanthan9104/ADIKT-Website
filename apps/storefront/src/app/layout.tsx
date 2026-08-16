@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
+import { StoreProvider } from "@/components/providers/StoreProvider"
+import { CartDrawer } from "@/components/cart/CartDrawer"
 
 export const metadata: Metadata = {
   title: {
@@ -20,9 +22,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased selection:bg-accent selection:text-white font-sans">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <StoreProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <CartDrawer />
+        </StoreProvider>
       </body>
     </html>
   )

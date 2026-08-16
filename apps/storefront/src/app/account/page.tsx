@@ -1,173 +1,195 @@
 "use client"
 
-import React, { useState } from "react"
-import { Package, User, MapPin, Truck, ExternalLink } from "@/components/ui/Icons"
+import React from "react"
+import Link from "next/link"
+import { useCustomer } from "@/components/providers/CustomerContext"
+import { useWishlist } from "@/components/providers/WishlistContext"
+import { Package, User, MapPin, Heart, ArrowRight, Truck } from "@/components/ui/Icons"
 import { formatPrice, formatDate } from "@/lib/formatters"
 
-export default function AccountPage() {
-  const [activeTab, setActiveTab] = useState<"orders" | "addresses" | "profile">("orders")
+export default function AccountDashboardPage() {
+  const { customer, orders, addresses, logout } = useCustomer()
+  const { wishlistCount } = useWishlist()
 
-  const orders = [
-    {
-      id: "ADKT-10488",
-      date: "2026-08-10T14:30:00Z",
-      status: "Delivered",
-      total: 3499,
-      awb: "14328901234",
-      courier: "Delhivery Express",
-      items: [
-        {
-          title: "400 GSM French Terry Drop-Shoulder Hoodie",
-          variant: "L / Olive",
-          price: 3499,
-          quantity: 1,
-        },
-      ],
-    },
-    {
-      id: "ADKT-10390",
-      date: "2026-07-28T11:20:00Z",
-      status: "Delivered",
-      total: 1999,
-      awb: "18923019283",
-      courier: "Bluedart Surface",
-      items: [
-        {
-          title: "280 GSM Boxy Heavyweight Tee",
-          variant: "L / Vintage Black",
-          price: 1999,
-          quantity: 1,
-        },
-      ],
-    },
-  ]
+  const recentOrder = orders[0]
+  const defaultAddress = addresses.find((a) => a.isDefault) || addresses[0]
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 space-y-8">
+      {/* Welcome Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
-        <div>
-          <h1 className="text-3xl font-black uppercase tracking-tight text-white font-display">
-            Customer Portal
+        <div className="space-y-1">
+          <span className="text-xs font-bold uppercase tracking-widest text-accent">VIP Member</span>
+          <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white font-display">
+            Welcome Back, {customer?.firstName || "Aditya"}
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">Logged in as aditya.sharma@example.com</p>
+          <p className="text-xs text-zinc-400">{customer?.email || "aditya.sharma@example.com"}</p>
         </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-zinc-800 gap-6">
         <button
-          onClick={() => setActiveTab("orders")}
-          className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 -mb-px ${
-            activeTab === "orders"
-              ? "border-accent text-white"
-              : "border-transparent text-zinc-400 hover:text-white"
-          }`}
+          onClick={logout}
+          className="self-start sm:self-auto px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold uppercase rounded-lg text-zinc-300 hover:text-white"
         >
-          <Package className="h-4 w-4" /> My Orders & Tracking
-        </button>
-        <button
-          onClick={() => setActiveTab("addresses")}
-          className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 -mb-px ${
-            activeTab === "addresses"
-              ? "border-accent text-white"
-              : "border-transparent text-zinc-400 hover:text-white"
-          }`}
-        >
-          <MapPin className="h-4 w-4" /> Saved Addresses
-        </button>
-        <button
-          onClick={() => setActiveTab("profile")}
-          className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 -mb-px ${
-            activeTab === "profile"
-              ? "border-accent text-white"
-              : "border-transparent text-zinc-400 hover:text-white"
-          }`}
-        >
-          <User className="h-4 w-4" /> Profile Settings
+          Sign Out
         </button>
       </div>
 
-      {/* Tab Content */}
-      {activeTab === "orders" && (
-        <div className="space-y-4">
-          {orders.map((order) => (
-            <div
-              key={order.id}
-              className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4"
-            >
+      {/* Quick Navigation Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link
+          href="/account/orders"
+          className="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors space-y-2 group"
+        >
+          <div className="p-2.5 rounded-xl bg-zinc-950 w-fit text-accent">
+            <Package className="h-5 w-5" />
+          </div>
+          <h3 className="text-sm font-bold uppercase text-white group-hover:text-accent transition-colors">
+            My Orders
+          </h3>
+          <p className="text-xs text-zinc-400">{orders.length} orders recorded</p>
+        </Link>
+
+        <Link
+          href="/account/addresses"
+          className="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors space-y-2 group"
+        >
+          <div className="p-2.5 rounded-xl bg-zinc-950 w-fit text-accent">
+            <MapPin className="h-5 w-5" />
+          </div>
+          <h3 className="text-sm font-bold uppercase text-white group-hover:text-accent transition-colors">
+            Addresses
+          </h3>
+          <p className="text-xs text-zinc-400">{addresses.length} saved addresses</p>
+        </Link>
+
+        <Link
+          href="/account/wishlist"
+          className="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors space-y-2 group"
+        >
+          <div className="p-2.5 rounded-xl bg-zinc-950 w-fit text-accent">
+            <Heart className="h-5 w-5" />
+          </div>
+          <h3 className="text-sm font-bold uppercase text-white group-hover:text-accent transition-colors">
+            Saved Wishlist
+          </h3>
+          <p className="text-xs text-zinc-400">{wishlistCount} saved silhouettes</p>
+        </Link>
+
+        <Link
+          href="/account/profile"
+          className="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors space-y-2 group"
+        >
+          <div className="p-2.5 rounded-xl bg-zinc-950 w-fit text-accent">
+            <User className="h-5 w-5" />
+          </div>
+          <h3 className="text-sm font-bold uppercase text-white group-hover:text-accent transition-colors">
+            Profile Settings
+          </h3>
+          <p className="text-xs text-zinc-400">Manage login & security</p>
+        </Link>
+      </div>
+
+      {/* Grid: Latest Order Snapshot + Primary Address */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Latest Order Card (8 cols) */}
+        <div className="lg:col-span-8 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+              Most Recent Order
+            </h3>
+            <Link href="/account/orders" className="text-xs font-bold uppercase text-accent hover:underline">
+              View All Orders
+            </Link>
+          </div>
+
+          {recentOrder ? (
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-zinc-800 text-xs">
                 <div>
-                  <span className="font-bold text-white text-sm mr-3">Order #{order.id}</span>
-                  <span className="text-zinc-400">{formatDate(order.date)}</span>
+                  <span className="font-bold text-white text-sm mr-3 font-mono">
+                    #{recentOrder.displayId}
+                  </span>
+                  <span className="text-zinc-400">{formatDate(recentOrder.createdAt)}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="bg-green-500/20 text-green-400 border border-green-500/30 px-2.5 py-0.5 rounded-full font-bold uppercase text-[10px]">
-                    {order.status}
+                    {recentOrder.status}
                   </span>
-                  <span className="font-bold text-white text-sm">{formatPrice(order.total)}</span>
+                  <span className="font-bold text-white text-sm">
+                    {formatPrice(recentOrder.total)}
+                  </span>
                 </div>
               </div>
 
-              {/* Items */}
+              {/* Line Items Snapshot */}
               <div className="space-y-2">
-                {order.items.map((item, idx) => (
+                {recentOrder.items.map((item, idx) => (
                   <div key={idx} className="flex justify-between text-xs text-zinc-300">
                     <span>
                       {item.title} <span className="text-zinc-500">({item.variant})</span>
                     </span>
-                    <span>{formatPrice(item.price)}</span>
+                    <span>{formatPrice(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Shiprocket Tracking Info */}
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-zinc-400 bg-zinc-950/60 p-3 rounded-lg border border-zinc-800/60">
+              <div className="p-3 bg-zinc-950 rounded-xl border border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
                 <div className="flex items-center gap-2">
                   <Truck className="h-4 w-4 text-accent" />
                   <span>
-                    Courier: <strong className="text-white">{order.courier}</strong> (AWB: {order.awb})
+                    Courier: <strong className="text-white">{recentOrder.courier}</strong> (AWB: {recentOrder.awb})
                   </span>
                 </div>
-                <button className="text-accent hover:underline inline-flex items-center gap-1 font-semibold">
-                  Track Live Delivery <ExternalLink className="h-3 w-3" />
-                </button>
+                <Link
+                  href={`/account/orders/${recentOrder.id}`}
+                  className="text-accent hover:underline font-bold"
+                >
+                  View Details
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
-      )}
-
-      {activeTab === "addresses" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2 text-xs">
-            <div className="flex justify-between items-center">
-              <span className="font-bold text-white text-sm">Default Shipping Address</span>
-              <span className="bg-accent/20 text-accent px-2 py-0.5 rounded text-[10px] font-bold">PRIMARY</span>
+          ) : (
+            <div className="p-8 rounded-2xl bg-zinc-900 border border-zinc-800 text-center text-xs text-zinc-400">
+              No orders placed yet.
             </div>
-            <p className="text-white font-medium">Aditya Sharma (+91 9876543210)</p>
-            <p className="text-zinc-400">B-402, Highline Residences, Linking Road</p>
-            <p className="text-zinc-400">Bandra West, Mumbai, Maharashtra - 400050</p>
-          </div>
+          )}
         </div>
-      )}
 
-      {activeTab === "profile" && (
-        <div className="max-w-xl p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
-          <h3 className="text-sm font-bold text-white">Account Details</h3>
-          <div className="space-y-1">
-            <span className="text-zinc-500">Full Name</span>
-            <p className="text-white font-semibold">Aditya Sharma</p>
+        {/* Primary Address (4 cols) */}
+        <div className="lg:col-span-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+              Default Shipping Address
+            </h3>
+            <Link href="/account/addresses" className="text-xs font-bold uppercase text-accent hover:underline">
+              Manage
+            </Link>
           </div>
-          <div className="space-y-1">
-            <span className="text-zinc-500">Email</span>
-            <p className="text-white font-semibold">aditya.sharma@example.com</p>
-          </div>
-          <div className="space-y-1">
-            <span className="text-zinc-500">Phone</span>
-            <p className="text-white font-semibold">+91 98765 43210</p>
-          </div>
+
+          {defaultAddress ? (
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-white">{defaultAddress.name}</span>
+                <span className="bg-accent/20 text-accent px-2 py-0.5 rounded text-[10px] font-bold">
+                  PRIMARY
+                </span>
+              </div>
+              <p className="text-zinc-400">{defaultAddress.phone}</p>
+              <p className="text-zinc-300">{defaultAddress.addressLine1}</p>
+              {defaultAddress.addressLine2 && (
+                <p className="text-zinc-400">{defaultAddress.addressLine2}</p>
+              )}
+              <p className="text-zinc-400">
+                {defaultAddress.city}, {defaultAddress.state} - {defaultAddress.pincode}
+              </p>
+            </div>
+          ) : (
+            <div className="p-8 rounded-2xl bg-zinc-900 border border-zinc-800 text-center text-xs text-zinc-400">
+              No addresses saved.
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

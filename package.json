@@ -11,7 +11,7 @@
     "dev": "npm run dev:storefront",
     "dev:backend": "npm run dev --workspace=@adikt/backend",
     "dev:storefront": "npm run dev --workspace=@adikt/storefront",
-    "build": "npm run build:packages && npm run build:backend && npm run build:storefront",
+    "build": "npm run build:packages && npm run build:storefront",
     "build:packages": "npm run build --workspace=@adikt/types && npm run build --workspace=@adikt/ui",
     "build:backend": "npm run build --workspace=@adikt/backend",
     "build:storefront": "npm run build --workspace=@adikt/storefront",
