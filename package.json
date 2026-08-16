@@ -1,0 +1,35 @@
+{
+  "name": "adikt-commerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ADIKT - Self-Hosted D2C Ecommerce Monorepo powered by Medusa v2 and Next.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:storefront",
+    "dev:backend": "npm run dev --workspace=@adikt/backend",
+    "dev:storefront": "npm run dev --workspace=@adikt/storefront",
+    "build": "npm run build:packages && npm run build:backend && npm run build:storefront",
+    "build:packages": "npm run build --workspace=@adikt/types && npm run build --workspace=@adikt/ui",
+    "build:backend": "npm run build --workspace=@adikt/backend",
+    "build:storefront": "npm run build --workspace=@adikt/storefront",
+    "typecheck": "npm run typecheck --workspace=@adikt/types && npm run typecheck --workspace=@adikt/ui && npm run typecheck --workspace=@adikt/storefront",
+    "lint": "npm run lint --workspace=@adikt/storefront",
+    "clean": "rimraf apps/*/dist apps/*/.next packages/*/dist node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  },
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5"
+  }
+}

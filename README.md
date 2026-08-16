@@ -35,23 +35,31 @@ All core architectural decisions, data models, integration specifications, and o
 
 ---
 
-## 📦 Project Layout
+## 📦 Monorepo Architecture
 
 ```
-e:\ADIKT Website/
-├── .env.example                     # Master environment variable template
-├── README.md                        # Documentation portal
-├── docs/                            # In-depth architectural & operational specs
-│   ├── architecture.md
-│   ├── database.md
-│   ├── api.md
-│   ├── security.md
-│   ├── deployment.md
-│   ├── testing.md
-│   ├── integrations.md
-│   └── shopify-migration.md
-├── backend/                         # Medusa v2 Commerce Core
-└── storefront/                      # Next.js 15 Customer Storefront
+/
+├── apps/
+│   ├── backend/                     # Medusa v2 Commerce Core & Custom DML Modules
+│   │   ├── src/
+│   │   │   ├── modules/             # Clothing Spec, Reviews, Wishlist, CMS Banners
+│   │   │   ├── links/               # Module links (product <-> clothing-spec, review)
+│   │   │   └── admin/               # Custom Admin Widgets & Analytics Dashboard
+│   │   └── medusa-config.ts         # Medusa v2 Master Config (PostgreSQL, Redis, Auth)
+│   └── storefront/                  # Next.js 15 App Router Customer Storefront
+│       ├── src/
+│       │   ├── app/                 # Home, Catalog, Product Details, Cart, Checkout, Account
+│       │   ├── components/          # ProductCard, SizeChartModal, DetailView, Header, Footer
+│       │   └── lib/                 # @medusajs/js-sdk Client & Formatters
+│       └── tailwind.config.ts       # Luxury dark aesthetic & typography tokens
+├── packages/
+│   ├── config/                      # Shared base tsconfig & tooling configs
+│   ├── types/                       # Shared domain TypeScript interfaces & DTOs
+│   └── ui/                          # Shared UI utility tokens & helpers (cn)
+├── docs/                            # Comprehensive architectural & operational specs
+├── scripts/                         # Environment validator & operational scripts
+├── .env.example                     # Master environment variables template
+└── package.json                     # Root monorepo workspace manifest
 ```
 
 ---
@@ -67,15 +75,39 @@ e:\ADIKT Website/
 ```bash
 cp .env.example .env
 ```
-
-### 3. Initialize Backend & Storefront
+Validate your environment setup:
 ```bash
-# Install root dependencies
+node scripts/check-env.js
+```
+
+### 3. Install Dependencies & Build Packages
+```bash
+# Install workspace dependencies
 npm install
 
-# Run backend development server
-cd backend && npm run dev
+# Build shared types and ui packages
+npm run build:packages
+```
 
-# Run storefront development server
-cd storefront && npm run dev
+### 4. Running the Development Servers
+
+```bash
+# Start Next.js Storefront (http://localhost:3000)
+npm run dev:storefront
+
+# Start Medusa v2 Backend & Admin (http://localhost:9000 & http://localhost:9000/app)
+npm run dev:backend
+```
+
+### 5. Verification Commands
+
+```bash
+# Typecheck all packages, storefront, and backend
+npm run typecheck
+
+# Lint storefront codebase
+npm run lint
+
+# Build full production bundle (Packages + Storefront)
+npm run build
 ```
