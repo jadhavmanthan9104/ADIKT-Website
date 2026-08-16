@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { Check } from "@/components/ui/Icons"
+import { BrandLogo } from "@/components/ui/BrandLogo"
 
 export function Footer() {
   const [email, setEmail] = useState("")
@@ -64,9 +65,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Brand Col */}
           <div className="space-y-4 md:col-span-2">
-            <Link href="/" className="text-2xl font-black tracking-tighter uppercase font-display text-white">
-              ADIKT<span className="text-accent">.</span>
-            </Link>
+            <BrandLogo size="lg" href="/" />
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-sm">
               Engineered luxury streetwear & high-GSM silhouettes. Designed, milled, and manufactured with uncompromising craftsmanship in India.
             </p>

@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ShoppingBag, Search, User, Menu, X, Heart } from "@/components/ui/Icons"
+import { BrandLogo } from "@/components/ui/BrandLogo"
 import { useCart } from "@/components/providers/CartContext"
 import { useWishlist } from "@/components/providers/WishlistContext"
 import { useCustomer } from "@/components/providers/CustomerContext"
@@ -46,9 +47,7 @@ export function Header() {
 
         {/* Brand Logo & Desktop Nav */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-2xl font-black tracking-tighter uppercase font-display text-white">
-            ADIKT<span className="text-accent">.</span>
-          </Link>
+          <BrandLogo size="md" href="/" />
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-zinc-300">
