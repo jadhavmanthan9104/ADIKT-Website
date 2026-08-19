@@ -14,8 +14,8 @@ export default function AccountDashboardPage() {
   const { customer, orders, addresses, logout, isLoaded } = useCustomer()
   const { wishlistCount } = useWishlist()
 
-  const handleSignOut = () => {
-    logout()
+  const handleSignOut = async () => {
+    await logout()
     router.push("/login")
   }
 
@@ -159,7 +159,8 @@ export default function AccountDashboardPage() {
                 <div className="flex items-center gap-2">
                   <Truck className="h-4 w-4 text-accent" />
                   <span>
-                    Courier: <strong className="text-white">{recentOrder.courier}</strong> (AWB: {recentOrder.awb})
+                    Carrier: <strong className="text-white">{recentOrder.awb ? recentOrder.courier : "Not assigned yet"}</strong>
+                    {recentOrder.awb ? ` (AWB: ${recentOrder.awb})` : ""}
                   </span>
                 </div>
                 <Link
@@ -183,7 +184,7 @@ export default function AccountDashboardPage() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-white">
               Default Shipping Address
             </h3>
-            <Link href="/account/addresses" className="text-xs font-bold uppercase text-accent hover:underline">
+            <Link href="/account/addresses" className="text-xs font-bold uppercase text-[#9A0000] hover:underline">
               Manage
             </Link>
           </div>
@@ -192,7 +193,7 @@ export default function AccountDashboardPage() {
             <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2 text-xs">
               <div className="flex justify-between items-center">
                 <span className="font-bold text-white">{defaultAddress.name}</span>
-                <span className="bg-accent/20 text-accent px-2 py-0.5 rounded text-[10px] font-bold">
+                <span className="bg-[#9A0000] border border-[#9A0000] text-white px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase shadow-sm">
                   PRIMARY
                 </span>
               </div>

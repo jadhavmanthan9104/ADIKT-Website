@@ -50,3 +50,10 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+
+# Runtime product data (persisted JSON store)
+data/
+apps/storefront/data/
+
+# Uploaded product images
+apps/storefront/public/uploads/

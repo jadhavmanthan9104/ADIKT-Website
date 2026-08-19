@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect } from "react"
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
 
 export interface CustomerAddress {
   id: string
@@ -18,19 +18,41 @@ export interface CustomerOrder {
   id: string
   displayId: string
   createdAt: string
-  status: "Processing" | "Shipped" | "Delivered" | "Cancelled"
+  status: "Pending" | "Processing" | "Packed" | "Shipped" | "Delivered" | "Cancelled" | "Refunded"
+  paymentStatus: "Captured" | "Pending" | "Refunded" | "Failed"
+  fulfillmentStatus: "Unfulfilled" | "Fulfilled" | "Partially Fulfilled" | "Returned"
   total: number
-  paymentMode: string
+  subtotal: number
+  discountTotal: number
+  shippingTotal: number
+  taxTotal: number
+  paymentMethod: string
   courier: string
-  awb: string
-  estimatedDelivery: string
-  shippingAddress: CustomerAddress
+  awb?: string
+  shippingAddress: {
+    name: string
+    phone: string
+    addressLine1: string
+    addressLine2?: string
+    city: string
+    state: string
+    pincode: string
+  }
   items: {
+    id: string
     title: string
     variant: string
+    sku: string
     quantity: number
     price: number
     thumbnail: string
+  }[]
+  timeline?: {
+    id: string
+    time: string
+    title: string
+    description: string
+    user?: string
   }[]
 }
 
@@ -40,6 +62,9 @@ export interface CustomerProfile {
   firstName: string
   lastName: string
   phone: string
+  addresses: CustomerAddress[]
+  wishlist: string[]
+  createdAt: string
 }
 
 export interface CustomerContextType {
@@ -48,188 +73,236 @@ export interface CustomerContextType {
   isLoaded: boolean
   addresses: CustomerAddress[]
   orders: CustomerOrder[]
-  login: (email: string, password?: string) => Promise<boolean>
-  logout: () => void
-  updateProfile: (data: Partial<CustomerProfile>) => Promise<boolean>
-  addAddress: (address: Omit<CustomerAddress, "id">) => void
-  updateAddress: (id: string, address: Partial<CustomerAddress>) => void
-  deleteAddress: (id: string) => void
-  setDefaultAddress: (id: string) => void
+  wishlist: string[]
+  login: (email: string, password: string) => Promise<boolean>
+  register: (data: {
+    email: string
+    password: string
+    firstName: string
+    lastName?: string
+    phone?: string
+  }) => Promise<boolean>
+  logout: () => Promise<void>
+  updateProfile: (data: {
+    firstName?: string
+    lastName?: string
+    phone?: string
+    newPassword?: string
+    currentPassword?: string
+  }) => Promise<boolean>
+  addAddress: (address: Omit<CustomerAddress, "id">) => Promise<CustomerAddress | null>
+  updateAddress: (id: string, address: Partial<CustomerAddress>) => Promise<boolean>
+  deleteAddress: (id: string) => Promise<boolean>
+  setDefaultAddress: (id: string) => Promise<boolean>
+  toggleWishlist: (productId: string) => Promise<boolean>
+  refreshCustomer: () => Promise<void>
+  refreshOrders: () => Promise<void>
 }
 
-const DEFAULT_DEMO_CUSTOMER: CustomerProfile = {
-  id: "cus_01JADIKT0928374",
-  email: "aditya.sharma@example.com",
-  firstName: "Aditya",
-  lastName: "Sharma",
-  phone: "+91 98765 43210",
-}
-
-const INITIAL_ADDRESSES: CustomerAddress[] = [
-  {
-    id: "addr_1",
-    name: "Aditya Sharma",
-    phone: "+91 98765 43210",
-    addressLine1: "B-402, Highline Residences, Linking Road",
-    addressLine2: "Near Turner Road Junction, Bandra West",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400050",
-    isDefault: true,
-  },
-  {
-    id: "addr_2",
-    name: "Aditya Sharma (Office)",
-    phone: "+91 98765 43210",
-    addressLine1: "WeWork Oberoi Commerz II, International Business Park",
-    addressLine2: "Goregaon East",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400063",
-    isDefault: false,
-  },
-]
-
-const INITIAL_ORDERS: CustomerOrder[] = [
-  {
-    id: "order_10492",
-    displayId: "ADKT-10492",
-    createdAt: "2026-08-16T14:30:00Z",
-    status: "Processing",
-    total: 4948,
-    paymentMode: "Razorpay Online (Prepaid)",
-    courier: "Delhivery Express",
-    awb: "14328909871",
-    estimatedDelivery: "Aug 19, 2026",
-    shippingAddress: INITIAL_ADDRESSES[0],
-    items: [
-      {
-        title: "280 GSM Boxy Heavyweight Tee",
-        variant: "L / Vintage Black",
-        quantity: 1,
-        price: 1999,
-        thumbnail: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80",
-      },
-      {
-        title: "400 GSM French Terry Drop-Shoulder Hoodie",
-        variant: "XL / Olive",
-        quantity: 1,
-        price: 3499,
-        thumbnail: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=400&q=80",
-      },
-    ],
-  },
-  {
-    id: "order_10388",
-    displayId: "ADKT-10388",
-    createdAt: "2026-08-02T10:15:00Z",
-    status: "Delivered",
-    total: 2999,
-    paymentMode: "Razorpay Online (Prepaid)",
-    courier: "Bluedart Surface",
-    awb: "18923019283",
-    estimatedDelivery: "Aug 05, 2026",
-    shippingAddress: INITIAL_ADDRESSES[0],
-    items: [
-      {
-        title: "Multi-Pocket Parachute Utility Cargo Pants",
-        variant: "L / Charcoal",
-        quantity: 1,
-        price: 2999,
-        thumbnail: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=400&q=80",
-      },
-    ],
-  },
-]
-
-const CustomerContext = createContext<CustomerContextType | undefined>(undefined)
+export const CustomerContext = createContext<CustomerContextType | undefined>(undefined)
 
 export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const [customer, setCustomer] = useState<CustomerProfile | null>(null)
-  const [addresses, setAddresses] = useState<CustomerAddress[]>(INITIAL_ADDRESSES)
-  const [orders, setOrders] = useState<CustomerOrder[]>(INITIAL_ORDERS)
+  const [addresses, setAddresses] = useState<CustomerAddress[]>([])
+  const [orders, setOrders] = useState<CustomerOrder[]>([])
+  const [wishlist, setWishlist] = useState<string[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
 
-  // Initialize session from localStorage on mount
-  useEffect(() => {
+  const refreshCustomer = useCallback(async () => {
     try {
-      const stored = localStorage.getItem("adikt_customer_session")
-      if (stored) {
-        setCustomer(JSON.parse(stored))
+      const res = await fetch("/api/auth/me")
+      if (res.ok) {
+        const data = await res.json()
+        setCustomer(data.customer)
+        setAddresses(data.customer?.addresses || [])
+        setWishlist(data.customer?.wishlist || [])
+        if (data.orders) setOrders(data.orders)
       } else {
-        // Default initial session for demo experience
-        setCustomer(DEFAULT_DEMO_CUSTOMER)
-        localStorage.setItem("adikt_customer_session", JSON.stringify(DEFAULT_DEMO_CUSTOMER))
+        setCustomer(null)
+        setAddresses([])
+        setOrders([])
+        setWishlist([])
       }
-    } catch (e) {
-      setCustomer(DEFAULT_DEMO_CUSTOMER)
+    } catch (err) {
+      console.warn("Failed to fetch customer session:", err)
+      setCustomer(null)
     } finally {
       setIsLoaded(true)
     }
   }, [])
 
-  const login = async (email: string): Promise<boolean> => {
-    const profile: CustomerProfile = {
-      ...DEFAULT_DEMO_CUSTOMER,
-      email: email.trim(),
-      firstName: email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1),
-    }
-    setCustomer(profile)
+  const refreshOrders = useCallback(async () => {
     try {
-      localStorage.setItem("adikt_customer_session", JSON.stringify(profile))
-    } catch (e) {
-      // ignore
-    }
-    return true
-  }
-
-  const logout = () => {
-    setCustomer(null)
-    try {
-      localStorage.removeItem("adikt_customer_session")
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  const updateProfile = async (data: Partial<CustomerProfile>): Promise<boolean> => {
-    if (customer) {
-      const updated = { ...customer, ...data }
-      setCustomer(updated)
-      try {
-        localStorage.setItem("adikt_customer_session", JSON.stringify(updated))
-      } catch (e) {
-        // ignore
+      const res = await fetch("/api/customer/orders")
+      if (res.ok) {
+        const data = await res.json()
+        setOrders(data.orders || [])
       }
+    } catch (err) {
+      console.warn("Failed to fetch orders:", err)
+    }
+  }, [])
+
+  // Check authentication session on mount
+  useEffect(() => {
+    refreshCustomer()
+  }, [refreshCustomer])
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(data.error || "Invalid email or password")
+    }
+
+    const data = await res.json()
+    setCustomer(data.customer)
+    setAddresses(data.customer?.addresses || [])
+    setWishlist(data.customer?.wishlist || [])
+    await refreshOrders()
+
+    if (data.customer?.id && typeof window !== "undefined") {
+      import("@/lib/analytics/analytics-hub").then(({ AnalyticsHub }) => {
+        AnalyticsHub.login(data.customer.id, "email")
+      })
     }
     return true
   }
 
-  const addAddress = (newAddr: Omit<CustomerAddress, "id">) => {
-    const created: CustomerAddress = {
-      ...newAddr,
-      id: `addr_${Date.now()}`,
+  const register = async (regData: {
+    email: string
+    password: string
+    firstName: string
+    lastName?: string
+    phone?: string
+  }): Promise<boolean> => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(regData),
+    })
+
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(data.error || "Registration failed")
     }
-    setAddresses((prev) => [...prev, created])
+
+    const data = await res.json()
+    setCustomer(data.customer)
+    setAddresses(data.customer?.addresses || [])
+    setWishlist(data.customer?.wishlist || [])
+
+    if (data.customer?.id && typeof window !== "undefined") {
+      import("@/lib/analytics/analytics-hub").then(({ AnalyticsHub }) => {
+        AnalyticsHub.signup(data.customer.id, "email")
+      })
+    }
+    return true
   }
 
-  const updateAddress = (id: string, updated: Partial<CustomerAddress>) => {
-    setAddresses((prev) =>
-      prev.map((addr) => (addr.id === id ? { ...addr, ...updated } : addr))
-    )
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" })
+    } catch {}
+    setCustomer(null)
+    setAddresses([])
+    setOrders([])
+    setWishlist([])
   }
 
-  const deleteAddress = (id: string) => {
-    setAddresses((prev) => prev.filter((addr) => addr.id !== id))
+  const updateProfile = async (data: {
+    firstName?: string
+    lastName?: string
+    phone?: string
+    newPassword?: string
+    currentPassword?: string
+  }): Promise<boolean> => {
+    const res = await fetch("/api/customer/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(errorData.error || "Failed to update profile")
+    }
+
+    const resData = await res.json()
+    setCustomer(resData.customer)
+    return true
   }
 
-  const setDefaultAddress = (id: string) => {
-    setAddresses((prev) =>
-      prev.map((addr) => ({
-        ...addr,
-        isDefault: addr.id === id,
-      }))
-    )
+  const addAddress = async (newAddr: Omit<CustomerAddress, "id">): Promise<CustomerAddress | null> => {
+    const res = await fetch("/api/customer/addresses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newAddr),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(errorData.error || "Failed to add address")
+    }
+
+    const resData = await res.json()
+    setAddresses(resData.addresses || [])
+    return resData.address
+  }
+
+  const updateAddress = async (id: string, updated: Partial<CustomerAddress>): Promise<boolean> => {
+    const res = await fetch(`/api/customer/addresses/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(errorData.error || "Failed to update address")
+    }
+
+    const resData = await res.json()
+    setAddresses(resData.addresses || [])
+    return true
+  }
+
+  const deleteAddress = async (id: string): Promise<boolean> => {
+    const res = await fetch(`/api/customer/addresses/${id}`, {
+      method: "DELETE",
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(errorData.error || "Failed to delete address")
+    }
+
+    const resData = await res.json()
+    setAddresses(resData.addresses || [])
+    return true
+  }
+
+  const setDefaultAddress = async (id: string): Promise<boolean> => {
+    return updateAddress(id, { isDefault: true })
+  }
+
+  const toggleWishlist = async (productId: string): Promise<boolean> => {
+    const res = await fetch("/api/customer/wishlist", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId }),
+    })
+
+    if (!res.ok) return false
+
+    const data = await res.json()
+    setWishlist(data.wishlist || [])
+    return data.isSaved
   }
 
   return (
@@ -240,13 +313,18 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
         isLoaded,
         addresses,
         orders,
+        wishlist,
         login,
+        register,
         logout,
         updateProfile,
         addAddress,
         updateAddress,
         deleteAddress,
         setDefaultAddress,
+        toggleWishlist,
+        refreshCustomer,
+        refreshOrders,
       }}
     >
       {children}

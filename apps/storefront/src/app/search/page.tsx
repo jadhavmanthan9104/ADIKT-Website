@@ -1,23 +1,42 @@
 "use client"
 
-import React, { useState, useMemo, Suspense } from "react"
+import React, { useState, useMemo, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { ProductCard } from "@/components/product/ProductCard"
 import { Search, X } from "@/components/ui/Icons"
 import { EmptyState } from "@/components/ui/EmptyState"
-import { STORE_PRODUCTS } from "@/lib/store-api"
+import { StoreProduct } from "@/lib/store-api"
+import { productStore } from "@/lib/product-store"
 
 function SearchContent() {
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get("q") || ""
   const [query, setQuery] = useState(initialQuery)
+  const [products, setProducts] = useState<StoreProduct[]>(() => productStore.getAllStoreProducts())
+
+  useEffect(() => {
+    const unsubscribe = productStore.subscribe(() => {
+      setProducts(productStore.getAllStoreProducts())
+    })
+
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.storeProducts?.length > 0) {
+          setProducts(data.storeProducts)
+        }
+      })
+      .catch(() => {})
+
+    return unsubscribe
+  }, [])
 
   const searchTerms = ["280 GSM", "French Terry", "Oversized", "Acid Wash", "Ripstop Cargos", "Bone White"]
 
   const results = useMemo(() => {
-    if (!query.trim()) return STORE_PRODUCTS
+    if (!query.trim()) return products
     const q = query.toLowerCase()
-    return STORE_PRODUCTS.filter(
+    return products.filter(
       (p) =>
         p.title.toLowerCase().includes(q) ||
         p.description?.toLowerCase().includes(q) ||
@@ -25,7 +44,7 @@ function SearchContent() {
         p.fit.toLowerCase().includes(q) ||
         String(p.gsm).includes(q)
     )
-  }, [query])
+  }, [products, query])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 space-y-8">

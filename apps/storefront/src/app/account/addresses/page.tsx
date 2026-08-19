@@ -10,6 +10,8 @@ export default function AddressesPage() {
   const { customer, addresses, addAddress, deleteAddress, setDefaultAddress, isLoaded } = useCustomer()
 
   const [isAdding, setIsAdding] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [newAddr, setNewAddr] = useState<Omit<CustomerAddress, "id">>({
     name: "",
     phone: "",
@@ -21,21 +23,30 @@ export default function AddressesPage() {
     isDefault: false,
   })
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (newAddr.name && newAddr.addressLine1 && newAddr.pincode) {
-      addAddress(newAddr)
-      setIsAdding(false)
-      setNewAddr({
-        name: "",
-        phone: "",
-        addressLine1: "",
-        addressLine2: "",
-        city: "",
-        state: "",
-        pincode: "",
-        isDefault: false,
-      })
+    setError(null)
+    setLoading(true)
+
+    try {
+      if (newAddr.name && newAddr.addressLine1 && newAddr.pincode) {
+        await addAddress(newAddr)
+        setIsAdding(false)
+        setNewAddr({
+          name: "",
+          phone: "",
+          addressLine1: "",
+          addressLine2: "",
+          city: "",
+          state: "",
+          pincode: "",
+          isDefault: false,
+        })
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to add address")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -188,7 +199,7 @@ export default function AddressesPage() {
             key={addr.id}
             className={`p-6 rounded-2xl border space-y-4 text-xs transition-colors ${
               addr.isDefault
-                ? "bg-zinc-900 border-accent/60"
+                ? "bg-zinc-900 border-[#9A0000]/60"
                 : "bg-zinc-900/60 border-zinc-800"
             }`}
           >
@@ -199,7 +210,7 @@ export default function AddressesPage() {
               </div>
 
               {addr.isDefault ? (
-                <span className="bg-accent/20 border border-accent/40 text-accent px-2.5 py-0.5 rounded font-bold uppercase text-[10px]">
+                <span className="bg-[#9A0000] border border-[#9A0000] text-white px-2.5 py-0.5 rounded font-extrabold uppercase text-[10px]">
                   Default
                 </span>
               ) : (

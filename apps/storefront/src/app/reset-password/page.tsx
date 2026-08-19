@@ -13,10 +13,15 @@ function ResetPasswordContent() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!token) {
+      setError("Reset token is missing from the URL. Please request a new link.")
+      return
+    }
     if (password.length < 8) {
       setError("Password must be at least 8 characters.")
       return
@@ -25,11 +30,34 @@ function ResetPasswordContent() {
       setError("Passwords do not match.")
       return
     }
+
     setError(null)
-    setSuccess(true)
-    setTimeout(() => {
-      router.push("/login")
-    }, 2000)
+    setLoading(true)
+
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          newPassword: password,
+        }),
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setSuccess(true)
+        setTimeout(() => {
+          router.push("/login")
+        }, 2000)
+      } else {
+        setError(data.error || "Failed to reset password")
+      }
+    } catch (err: any) {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

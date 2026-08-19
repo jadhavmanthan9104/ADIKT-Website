@@ -2,27 +2,54 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { ShoppingBag, Search, User, Menu, X, Heart } from "@/components/ui/Icons"
 import { BrandLogo } from "@/components/ui/BrandLogo"
 import { useCart } from "@/components/providers/CartContext"
 import { useWishlist } from "@/components/providers/WishlistContext"
 import { useCustomer } from "@/components/providers/CustomerContext"
+import { useContent } from "@/components/providers/ContentContext"
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
+  const { content } = useContent()
+  const announcement = content?.announcement || { active: false, text: "" }
+
+  // Dynamic Header Menus with fallback
+  const leftMenuItems = (content?.navigation?.leftMenuItems || [
+    { id: "nav_shop", label: "Shop All", url: "/shop", position: "left" as const, enabled: true },
+    { id: "nav_tees", label: "Tees", url: "/shop?category=tees", position: "left" as const, badge: "280 GSM", enabled: true },
+    { id: "nav_hoodies", label: "Hoodies", url: "/shop?category=hoodies", position: "left" as const, badge: "400 GSM", enabled: true },
+    { id: "nav_cargos", label: "Cargos", url: "/shop?category=cargos", position: "left" as const, enabled: true },
+  ]).filter((item) => item.enabled !== false)
+
+  const rightMenuItems = (content?.navigation?.rightMenuItems || [
+    { id: "nav_core", label: "Core Series", url: "/collections/core-heavyweight", position: "right" as const, badge: "Signature", enabled: true },
+    { id: "nav_craft", label: "The Craft", url: "/about", position: "right" as const, enabled: true },
+    { id: "nav_help", label: "Help", url: "/faq", position: "right" as const, enabled: true },
+  ]).filter((item) => item.enabled !== false)
+
   const router = useRouter()
-  const { openDrawer, itemCount } = useCart()
+  const pathname = usePathname()
+  const { openDrawer, itemCount, isCartBouncing } = useCart()
   const { wishlistCount } = useWishlist()
   const { isAuthenticated, logout } = useCustomer()
 
+  if (pathname?.startsWith("/admin")) return null
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+    const query = searchQuery.trim()
+    if (query) {
+      if (typeof window !== "undefined") {
+        import("@/lib/analytics/analytics-hub").then(({ AnalyticsHub }) => {
+          AnalyticsHub.search(query)
+        })
+      }
+      router.push(`/search?q=${encodeURIComponent(query)}`)
       setIsSearchOpen(false)
       setSearchQuery("")
     }
@@ -30,54 +57,95 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md">
-      {/* Announcement Bar */}
-      <div className="bg-accent text-white text-[11px] py-1.5 px-4 text-center font-bold tracking-wider uppercase">
-        ⚡ FREE EXPRESS SHIPPING ON ORDERS OVER ₹1,999 | CRAFTED IN INDIA WITH 280-400 GSM FABRICS
-      </div>
+      {/* Dynamic Announcement Bar */}
+      {announcement.active && announcement.text && (
+        announcement.link ? (
+          <Link
+            href={announcement.link}
+            className="block bg-[#9A0000] text-white text-[11px] py-1.5 px-4 text-center font-bold tracking-wider uppercase transition-all hover:bg-[#7a0000] shadow-sm"
+          >
+            {announcement.text}
+          </Link>
+        ) : (
+          <div className="bg-[#9A0000] text-white text-[11px] py-1.5 px-4 text-center font-bold tracking-wider uppercase transition-all shadow-sm">
+            {announcement.text}
+          </div>
+        )
+      )}
 
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Mobile menu toggle */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden text-white p-2 -ml-2 hover:text-accent"
-          aria-label="Toggle navigation menu"
-        >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+      <div className="max-w-7xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8 relative">
+        {/* Left Side: Mobile Menu Button (Mobile) & Dynamic Category Navigation Links (Desktop) */}
+        <div className="flex items-center gap-5 sm:gap-6 flex-1">
+          {/* Mobile menu toggle */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden text-white p-2 -ml-2 hover:text-accent transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
 
-        {/* Brand Logo & Desktop Nav */}
-        <div className="flex items-center gap-8">
-          <BrandLogo size="md" href="/" />
-
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-zinc-300">
-            <Link href="/shop" className="hover:text-white transition-colors">
-              All Drops
-            </Link>
-            <Link href="/shop?category=tees" className="hover:text-white transition-colors">
-              Heavyweight Tees
-            </Link>
-            <Link href="/shop?category=hoodies" className="hover:text-white transition-colors">
-              French Terry Hoodies
-            </Link>
-            <Link href="/shop?category=cargos" className="hover:text-white transition-colors">
-              Parachute Cargos
-            </Link>
-            <Link href="/collections/core-heavyweight" className="hover:text-white transition-colors">
-              Core Series
-            </Link>
-            <Link href="/about" className="hover:text-white transition-colors text-zinc-400">
-              The Craft
-            </Link>
+          {/* Desktop Left Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs font-bold uppercase tracking-wider text-zinc-300">
+            {leftMenuItems.map((item) => {
+              const isActive = pathname === item.url || (item.url !== "/" && pathname?.startsWith(item.url))
+              return (
+                <Link
+                  key={item.id}
+                  href={item.url}
+                  target={item.openInNewTab ? "_blank" : undefined}
+                  rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                  className={`inline-flex items-center gap-1.5 hover:text-accent transition-colors ${
+                    isActive ? "text-accent font-extrabold" : "text-zinc-300"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="text-[9px] font-extrabold tracking-normal px-1.5 py-0.2 rounded bg-accent/15 text-accent border border-accent/30 lowercase font-mono">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              )
+            })}
           </nav>
         </div>
 
-        {/* Action Icons (Search, Account, Wishlist, Bag) */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Center: Prominent Centered Brand Logo */}
+        <div className="flex items-center justify-center shrink-0 px-2 sm:px-4">
+          <BrandLogo size="lg" href="/" />
+        </div>
+
+        {/* Right Side: Editorial Links & Action Icons */}
+        <div className="flex items-center justify-end gap-1.5 sm:gap-3 flex-1">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs font-bold uppercase tracking-wider text-zinc-300 mr-2 sm:mr-4">
+            {rightMenuItems.map((item) => {
+              const isActive = pathname === item.url || (item.url !== "/" && pathname?.startsWith(item.url))
+              return (
+                <Link
+                  key={item.id}
+                  href={item.url}
+                  target={item.openInNewTab ? "_blank" : undefined}
+                  rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                  className={`inline-flex items-center gap-1.5 hover:text-accent transition-colors ${
+                    isActive ? "text-accent font-extrabold" : "text-zinc-400"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="text-[9px] font-extrabold tracking-normal px-1.5 py-0.2 rounded bg-accent/15 text-accent border border-accent/30 lowercase font-mono">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              )
+            })}
+          </nav>
+
           {/* Quick Search Toggle */}
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="text-zinc-300 hover:text-white p-2"
+            className="text-zinc-300 hover:text-accent p-2 transition-colors"
             aria-label="Search"
           >
             <Search className="h-5 w-5" />
@@ -86,7 +154,7 @@ export function Header() {
           {/* Customer Account */}
           <Link
             href={isAuthenticated ? "/account" : "/login"}
-            className="text-zinc-300 hover:text-white p-2 hidden sm:block"
+            className="text-zinc-300 hover:text-accent p-2 hidden sm:block transition-colors"
             aria-label="Customer Account"
           >
             <User className="h-5 w-5" />
@@ -95,12 +163,12 @@ export function Header() {
           {/* Wishlist Counter */}
           <Link
             href="/account/wishlist"
-            className="relative text-zinc-300 hover:text-white p-2 hidden sm:block"
+            className="relative text-zinc-300 hover:text-accent p-2 hidden sm:block transition-colors"
             aria-label="Wishlist"
           >
             <Heart className="h-5 w-5" />
             {wishlistCount > 0 && (
-              <span className="absolute top-1 right-1 bg-zinc-800 text-[10px] font-bold text-white h-4 w-4 rounded-full flex items-center justify-center border border-zinc-700">
+              <span suppressHydrationWarning className="absolute top-1 right-1 bg-zinc-800 text-[10px] font-bold text-white h-4 w-4 rounded-full flex items-center justify-center border border-zinc-700">
                 {wishlistCount}
               </span>
             )}
@@ -108,13 +176,21 @@ export function Header() {
 
           {/* Shopping Bag & Quick Drawer Opener */}
           <button
+            id="header-cart-btn"
             onClick={openDrawer}
-            className="relative text-zinc-300 hover:text-white p-2"
+            className={`relative text-zinc-300 hover:text-white p-2 transition-all duration-300 ${
+              isCartBouncing ? "scale-125 text-white" : ""
+            }`}
             aria-label="Shopping Bag"
           >
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingBag className={`h-5 w-5 transition-transform duration-300 ${isCartBouncing ? "rotate-12 stroke-[2.5]" : ""}`} />
             {itemCount > 0 && (
-              <span className="absolute top-1 right-1 bg-accent text-[10px] font-bold text-white h-4 w-4 rounded-full flex items-center justify-center animate-pulse">
+              <span
+                suppressHydrationWarning
+                className={`absolute top-1 right-1 bg-[#9A0000] text-[10px] font-black text-white h-4 w-4 rounded-full flex items-center justify-center transition-all ${
+                  isCartBouncing ? "scale-125 ring-4 ring-[#9A0000]/50 animate-bounce" : ""
+                }`}
+              >
                 {itemCount}
               </span>
             )}
@@ -149,51 +225,60 @@ export function Header() {
 
       {/* Mobile Navigation Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-b border-zinc-800 bg-zinc-950 px-4 pt-3 pb-6 space-y-3">
-          <Link
-            href="/shop"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-bold uppercase text-white hover:text-accent"
-          >
-            All Drops
-          </Link>
-          <Link
-            href="/shop?category=tees"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-zinc-300 hover:text-white"
-          >
-            Heavyweight Tees (280 GSM)
-          </Link>
-          <Link
-            href="/shop?category=hoodies"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-zinc-300 hover:text-white"
-          >
-            French Terry Hoodies (400 GSM)
-          </Link>
-          <Link
-            href="/shop?category=cargos"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-zinc-300 hover:text-white"
-          >
-            Parachute & Utility Cargos
-          </Link>
-          <Link
-            href="/collections/core-heavyweight"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-zinc-300 hover:text-white"
-          >
-            Core Heavyweight Series
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-medium text-zinc-400 hover:text-white"
-          >
-            About ADIKT Craft
-          </Link>
+        <div className="lg:hidden border-b border-zinc-800 bg-zinc-950 px-4 pt-4 pb-6 space-y-5">
+          <div className="space-y-1">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-accent px-1">
+              Silhouettes & Drops
+            </span>
+            <div className="space-y-1 pt-1">
+              {leftMenuItems.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.url}
+                  target={item.openInNewTab ? "_blank" : undefined}
+                  rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-2 px-1 text-sm font-medium text-zinc-200 hover:text-white"
+                >
+                  <span className="font-bold uppercase text-xs tracking-wider">{item.label}</span>
+                  {item.badge && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/20">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-          <div className="pt-4 border-t border-zinc-800 grid grid-cols-2 gap-2 text-xs font-bold uppercase">
+          {rightMenuItems.length > 0 && (
+            <div className="space-y-1 pt-2 border-t border-zinc-800/80">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-400 px-1">
+                The Brand
+              </span>
+              <div className="space-y-1 pt-1">
+                {rightMenuItems.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.url}
+                    target={item.openInNewTab ? "_blank" : undefined}
+                    rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between py-1.5 px-1 text-sm font-medium text-zinc-300 hover:text-white"
+                  >
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="pt-3 border-t border-zinc-800 grid grid-cols-2 gap-2 text-xs font-bold uppercase">
             {isAuthenticated ? (
               <>
                 <Link

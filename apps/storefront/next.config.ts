@@ -2,6 +2,7 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  transpilePackages: ["lucide-react"],
   images: {
     remotePatterns: [
       {
@@ -17,6 +18,21 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve = config.resolve || {}
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+        os: false,
+        stream: false,
+        buffer: false,
+      }
+    }
+    return config
   },
   async headers() {
     return [

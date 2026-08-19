@@ -8,7 +8,7 @@ import { ArrowRight, Mail, User, Phone, Lock } from "@/components/ui/Icons"
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { login } = useCustomer()
+  const { register } = useCustomer()
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -27,10 +27,16 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      await login(formData.email)
+      await register({
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+      })
       router.push("/account")
     } catch (err: any) {
-      setError("Registration failed. Please verify your details.")
+      setError(err.message || "Registration failed. Please verify your details.")
     } finally {
       setLoading(false)
     }

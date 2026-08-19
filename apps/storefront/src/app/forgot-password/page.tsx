@@ -7,11 +7,33 @@ import { ArrowLeft, Mail, Check } from "@/components/ui/Icons"
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
+  const [resetUrl, setResetUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email.includes("@")) {
-      setSubmitted(true)
+    setError(null)
+    setLoading(true)
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setSubmitted(true)
+        if (data.resetUrl) setResetUrl(data.resetUrl)
+      } else {
+        setError(data.error || "Failed to process password reset request")
+      }
+    } catch (err: any) {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -32,23 +54,31 @@ export default function ForgotPasswordPage() {
       </div>
 
       <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4">
+        {error && (
+          <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg">
+            {error}
+          </div>
+        )}
+
         {submitted ? (
           <div className="text-center space-y-3 py-4">
             <div className="h-10 w-10 mx-auto rounded-full bg-green-500/20 text-green-400 flex items-center justify-center">
               <Check className="h-5 w-5" />
             </div>
-            <h3 className="text-sm font-bold text-white uppercase">Reset Link Sent</h3>
+            <h3 className="text-sm font-bold text-white uppercase">Reset Link Issued</h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              We&apos;ve emailed a password reset link to <strong className="text-white">{email}</strong>. Please check your inbox and spam folder.
+              We&apos;ve issued a secure password reset token for <strong className="text-white">{email}</strong>.
             </p>
-            <div className="pt-2">
-              <Link
-                href="/reset-password?token=sample_token_adikt"
-                className="text-xs text-accent font-bold uppercase underline"
-              >
-                Proceed to Enter New Password
-              </Link>
-            </div>
+            {resetUrl && (
+              <div className="pt-2">
+                <Link
+                  href={resetUrl}
+                  className="inline-block px-4 py-2 bg-white hover:bg-zinc-200 text-black text-xs font-extrabold uppercase rounded-lg shadow-md transition-colors"
+                >
+                  Proceed to Enter New Password →
+                </Link>
+              </div>
+            )}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

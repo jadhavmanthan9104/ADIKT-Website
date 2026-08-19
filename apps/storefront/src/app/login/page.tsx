@@ -26,7 +26,7 @@ function LoginContent() {
       await login(email, password)
       router.push(returnTo)
     } catch (err: any) {
-      setError("Invalid email or password. Please try again.")
+      setError(err.message || "Invalid email or password. Please try again.")
     } finally {
       setLoading(false)
     }

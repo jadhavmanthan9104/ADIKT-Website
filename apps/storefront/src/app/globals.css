@@ -5,8 +5,8 @@
 @font-face {
   font-family: "SF Pro Display";
   src: local("SF Pro Display"), local("SFProDisplay-Regular"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff2") format("woff2"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff") format("woff");
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff2") format("woff2"),
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -15,8 +15,8 @@
 @font-face {
   font-family: "SF Pro Display";
   src: local("SF Pro Display Medium"), local("SFProDisplay-Medium"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff2") format("woff2"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff") format("woff");
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff2") format("woff2"),
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -25,8 +25,8 @@
 @font-face {
   font-family: "SF Pro Display";
   src: local("SF Pro Display Semibold"), local("SFProDisplay-Semibold"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff2") format("woff2"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff") format("woff");
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff2") format("woff2"),
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -35,8 +35,8 @@
 @font-face {
   font-family: "SF Pro Display";
   src: local("SF Pro Display Bold"), local("SFProDisplay-Bold"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff2") format("woff2"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff") format("woff");
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff2") format("woff2"),
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -45,8 +45,8 @@
 @font-face {
   font-family: "SF Pro Display";
   src: local("SF Pro Display Heavy"), local("SFProDisplay-Heavy"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-heavy-webfont.woff2") format("woff2"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-heavy-webfont.woff") format("woff");
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-heavy-webfont.woff2") format("woff2"),
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-heavy-webfont.woff") format("woff");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -55,8 +55,8 @@
 @font-face {
   font-family: "SF Pro Display";
   src: local("SF Pro Display Black"), local("SFProDisplay-Black"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-black-webfont.woff2") format("woff2"),
-       url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-black-webfont.woff") format("woff");
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-black-webfont.woff2") format("woff2"),
+    url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-black-webfont.woff") format("woff");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -69,11 +69,103 @@
   --card: #121215;
   --card-foreground: #fafafa;
   --border: #27272a;
-  --accent: #e11d48;
+  --accent: #9A0000;
+  color-scheme: dark;
+}
+
+html.dark,
+[data-theme="dark"] {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #121215;
+  --card-foreground: #fafafa;
+  --border: #27272a;
+  --accent: #9A0000;
+  color-scheme: dark;
+}
+
+html.light,
+[data-theme="light"] {
+  /* Warm Luxury Off-White / Alabaster Palette */
+  --background: #f6f5f2;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --border: #dedcd5;
+  --muted: #eeede9;
+  --muted-foreground: #3f3e3b;
+  --accent: #9A0000;
+  color-scheme: light;
+}
+
+/* ==========================================================================
+   CIRCULAR RIPPLE THEME VIEW TRANSITIONS (Native GPU Composited)
+   ========================================================================== */
+
+::view-transition-group(root) {
+  animation-duration: 0.52s;
+  animation-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999999;
+  will-change: clip-path;
+}
+
+/* Optimized fallback transition - Targeted to surface containers only */
+html.theme-transitioning body,
+html.theme-transitioning .admin-root,
+html.theme-transitioning header,
+html.theme-transitioning aside,
+html.theme-transitioning main,
+html.theme-transitioning .bg-zinc-900,
+html.theme-transitioning .bg-zinc-950,
+html.theme-transitioning .border-zinc-800 {
+  transition: background-color 360ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    border-color 360ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    color 260ms cubic-bezier(0.2, 0.9, 0.2, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
+  html.theme-transitioning body,
+  html.theme-transitioning .admin-root,
+  html.theme-transitioning header,
+  html.theme-transitioning aside {
+    transition: none !important;
+  }
 }
 
 @layer base {
-  html, body {
+
+  html,
+  body {
     font-family: var(--font-sf-pro);
     background-color: var(--background);
     color: var(--foreground);
@@ -83,13 +175,816 @@
     letter-spacing: -0.01em;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-sf-pro);
     letter-spacing: -0.025em;
   }
 }
 
-/* Custom modern scrollbars */
+/* ==========================================================================
+   COMPREHENSIVE LUXURY OFF-WHITE LIGHT THEME (Zero Greyed-Out Elements)
+   ========================================================================== */
+
+html.light {
+
+  /* Body & Root Page Surface */
+  body {
+    background-color: #f6f5f2 !important;
+    color: #09090b !important;
+  }
+
+  /* Brand Logo in Light Mode (Deep Obsidian Tone) */
+  img[alt*="ADIKT"],
+  img[src*="logo.png"],
+  header img[alt*="ADIKT"],
+  footer img[alt*="ADIKT"] {
+    filter: brightness(0) !important;
+  }
+
+  /* Header & Sticky Navigation */
+  header {
+    background-color: rgba(246, 245, 242, 0.96) !important;
+    border-color: #dedcd5 !important;
+  }
+
+  header nav a {
+    color: #27272a !important;
+    font-weight: 700 !important;
+  }
+
+  header nav a:hover {
+    color: #9A0000 !important;
+  }
+
+  header button,
+  header a {
+    color: #09090b !important;
+  }
+
+  header .border-zinc-800,
+  header .border-zinc-800\/80 {
+    border-color: #dedcd5 !important;
+  }
+
+  /* Expandable Search in Header */
+  header .bg-zinc-900\/95 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+  }
+
+  /* Mobile Drawer in Header */
+  header .lg\:hidden.bg-zinc-950 {
+    background-color: #f6f5f2 !important;
+    border-color: #dedcd5 !important;
+  }
+
+  /* Search Drawer in Header */
+  header .lg\:hidden.bg-zinc-900\/95 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+  }
+
+  /* Hero Section in Light Theme */
+  section.relative.h-\[80vh\],
+  section.relative.min-h-\[85vh\] {
+    background-color: #f6f5f2 !important;
+    border-color: #dedcd5 !important;
+  }
+
+  header .lg\:hidden a {
+    color: #09090b !important;
+    font-weight: 700 !important;
+  }
+
+  /* High Contrast Typography Overrides */
+  .text-white {
+    color: #09090b !important;
+  }
+
+  .text-zinc-100,
+  .text-zinc-200 {
+    color: #18181b !important;
+  }
+
+  .text-zinc-300 {
+    color: #27272a !important;
+  }
+
+  .text-zinc-400 {
+    color: #3f3e3b !important;
+  }
+
+  .text-zinc-500 {
+    color: #575653 !important;
+  }
+
+  .text-zinc-600 {
+    color: #71717a !important;
+  }
+
+  /* Keep Struck Discount Price Subtle */
+  .line-through {
+    color: #8c8a84 !important;
+  }
+
+  /* Surfaces, Panels & Elevated Cards */
+  .bg-zinc-950 {
+    background-color: #f6f5f2 !important;
+  }
+
+  .bg-zinc-950\/90,
+  .bg-zinc-950\/80,
+  .bg-zinc-950\/60 {
+    background-color: rgba(246, 245, 242, 0.94) !important;
+  }
+
+  .bg-zinc-900,
+  .bg-zinc-900\/10,
+  .bg-zinc-900\/20,
+  .bg-zinc-900\/30,
+  .bg-zinc-900\/40,
+  .bg-zinc-900\/50,
+  .bg-zinc-900\/60,
+  .bg-zinc-900\/70,
+  .bg-zinc-900\/80,
+  .bg-zinc-900\/90 {
+    background-color: #ffffff !important;
+  }
+
+  .bg-zinc-800,
+  .bg-zinc-800\/30,
+  .bg-zinc-800\/50,
+  .bg-zinc-800\/80 {
+    background-color: #eeede9 !important;
+  }
+
+  /* Clean Warm Stone Borders */
+  .border-zinc-800,
+  .border-zinc-800\/30,
+  .border-zinc-800\/40,
+  .border-zinc-800\/50,
+  .border-zinc-800\/60,
+  .border-zinc-800\/80,
+  .border-zinc-900,
+  .border-zinc-700 {
+    border-color: #dedcd5 !important;
+  }
+
+  /* Primary Action Buttons (Solid Obsidian with Clean Contrast) */
+  .bg-white.text-black {
+    background-color: #09090b !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .bg-white.text-black:hover {
+    background-color: #27272a !important;
+    color: #ffffff !important;
+  }
+
+  /* Secondary Buttons */
+  .bg-zinc-900\/80.text-white,
+  .bg-zinc-900.text-white {
+    background-color: #ffffff !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+  }
+
+  .bg-zinc-900\/80.text-white:hover,
+  .bg-zinc-900.text-white:hover {
+    background-color: #eeede9 !important;
+    border-color: #c9c7bf !important;
+  }
+
+  /* Accent #9A0000 Elements, Pills, Badges & Red Buttons (Always Pure White Text in Light & Dark Theme) */
+  html.light button[class*="bg-[#9A0000]"],
+  html.light button[class*="bg-[#9A0000]"] *,
+  html.light a[class*="bg-[#9A0000]"],
+  html.light a[class*="bg-[#9A0000]"] *,
+  html.light span[class*="bg-[#9A0000]"],
+  html.light span[class*="bg-[#9A0000]"] *,
+  html.light div[class*="bg-[#9A0000]"],
+  html.light div[class*="bg-[#9A0000]"] *,
+  html.light .bg-accent,
+  html.light .bg-accent *,
+  html.light .btn-accent,
+  html.light .btn-accent *,
+  html.light .badge-accent,
+  html.light .badge-accent *,
+  html.light .btn-added,
+  html.light .btn-added *,
+  button[class*="bg-[#9A0000]"],
+  button[class*="bg-[#9A0000]"] *,
+  a[class*="bg-[#9A0000]"],
+  a[class*="bg-[#9A0000]"] *,
+  span[class*="bg-[#9A0000]"],
+  span[class*="bg-[#9A0000]"] *,
+  div[class*="bg-[#9A0000]"],
+  div[class*="bg-[#9A0000]"] *,
+  .bg-accent,
+  .bg-accent *,
+  .btn-accent,
+  .btn-accent *,
+  .badge-accent,
+  .badge-accent *,
+  .btn-added,
+  .btn-added * {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  /* Razorpay #005BD1 Checkout Button (Pure White Text in Light Theme) */
+  [class*="bg-[#005BD1]"],
+  [class*="bg-[#005BD1]"] *,
+  [class*="bg-[#005bd1]"],
+  [class*="bg-[#005bd1]"] *,
+  .btn-razorpay-cta,
+  .btn-razorpay-cta *,
+  button.btn-razorpay-cta,
+  button.btn-razorpay-cta * {
+    background-color: #005BD1 !important;
+    color: #ffffff !important;
+    border-color: #005BD1 !important;
+  }
+
+  .btn-razorpay-cta:hover,
+  button.btn-razorpay-cta:hover {
+    background-color: #004bb0 !important;
+    color: #ffffff !important;
+  }
+
+  /* Cash On Delivery Checkout Button: Solid Black with Pure White Text in Light Theme */
+  .btn-cod-cta,
+  .btn-cod-cta *,
+  button.btn-cod-cta,
+  button.btn-cod-cta * {
+    background-color: #09090b !important;
+    color: #ffffff !important;
+    border-color: #09090b !important;
+  }
+
+  .btn-cod-cta:hover,
+  button.btn-cod-cta:hover {
+    background-color: #27272a !important;
+    color: #ffffff !important;
+  }
+
+  /* Preserve transparent fill on SVG outline icons */
+  svg[fill="none"],
+  svg[fill="none"] *,
+  .fill-none,
+  .fill-none * {
+    fill: none !important;
+  }
+
+  /* Filter Buttons & Options in Shop/Search */
+  aside .bg-zinc-950,
+  aside button.bg-zinc-950,
+  .grid-cols-2 button.bg-zinc-950,
+  .grid-cols-5 button.bg-zinc-950 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    color: #09090b !important;
+    font-weight: 700 !important;
+  }
+
+  aside button.bg-zinc-950:hover,
+  .grid-cols-2 button.bg-zinc-950:hover,
+  .grid-cols-5 button.bg-zinc-950:hover {
+    background-color: #eeede9 !important;
+    border-color: #b8b6ad !important;
+    color: #09090b !important;
+  }
+
+  /* Active Filter Pills (Solid Red with White Text) */
+  aside button.border-accent.bg-accent,
+  .grid-cols-5 button.border-accent.bg-accent,
+  aside button.active-pill,
+  .btn-added {
+    background-color: #9A0000 !important;
+    border-color: #9A0000 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 8px rgba(154, 0, 0, 0.35) !important;
+  }
+
+  aside button.border-accent.bg-accent *,
+  .grid-cols-5 button.border-accent.bg-accent *,
+  aside button.active-pill *,
+  .btn-added * {
+    color: #ffffff !important;
+  }
+
+  /* Category Filter Pill List */
+  aside button.text-zinc-400 {
+    color: #27272a !important;
+    font-weight: 600 !important;
+  }
+
+  aside button.text-zinc-400:hover {
+    background-color: #eeede9 !important;
+    color: #09090b !important;
+  }
+
+  /* Product Cards & Garment Gallery */
+  .group .relative.aspect-\[3\/4\] {
+    background-color: #eeede9 !important;
+    border-color: #dedcd5 !important;
+  }
+
+  /* Wishlist Heart Button on Product Card */
+  .group .relative.aspect-\[3\/4\] button.bg-black\/60 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .group .relative.aspect-\[3\/4\] button.bg-black\/60:hover {
+    background-color: #ffffff !important;
+    transform: scale(1.05);
+  }
+
+  /* Quick Add Trigger Button in Product Card */
+  .group .relative.aspect-\[3\/4\] .quick-add-trigger-btn {
+    background-color: #09090b !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Quick Add Size Selector Tray (Light Theme Styling) */
+  html.light .quick-add-size-tray {
+    background-color: #ffffff !important;
+    border-top: 1px solid #e4e4e7 !important;
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  html.light .quick-add-size-tray span,
+  html.light .quick-add-size-tray a {
+    color: #18181b !important;
+  }
+
+  html.light .quick-add-size-tray button.size-pill-btn {
+    background-color: #f4f4f5 !important;
+    border: 1px solid #e4e4e7 !important;
+    color: #18181b !important;
+    font-weight: 800 !important;
+  }
+
+  html.light .quick-add-size-tray button.size-pill-btn:hover {
+    background-color: #18181b !important;
+    color: #ffffff !important;
+  }
+
+  html.light .quick-add-size-tray button.size-pill-btn.btn-added {
+    background-color: #9A0000 !important;
+    border-color: #9A0000 !important;
+    color: #ffffff !important;
+  }
+
+  html.light .quick-add-size-tray button.close-tray-btn {
+    background-color: #f4f4f5 !important;
+    color: #52525b !important;
+  }
+
+  html.light .quick-add-size-tray button.close-tray-btn:hover {
+    background-color: #e4e4e7 !important;
+    color: #18181b !important;
+  }
+
+  /* Sold Out Card Overlay */
+  .group .relative.aspect-\[3\/4\] .bg-black\/60.backdrop-blur-sm {
+    background-color: rgba(246, 245, 242, 0.85) !important;
+  }
+
+  .group .relative.aspect-\[3\/4\] .bg-black\/60.backdrop-blur-sm .bg-zinc-800 {
+    background-color: #ffffff !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+    font-weight: 800 !important;
+  }
+
+  /* Inputs, Search and Form Elements */
+  input,
+  select,
+  textarea {
+    background-color: #ffffff !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+    font-weight: 500 !important;
+  }
+
+  select.bg-transparent {
+    background-color: transparent !important;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #9A0000 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px #9A0000 !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #787672 !important;
+  }
+
+  /* Price Range Slider Track & Thumb */
+  input[type="range"] {
+    accent-color: #9A0000 !important;
+    background-color: #dedcd5 !important;
+  }
+
+  /* Cart Drawer & Modals */
+  .fixed.inset-y-0.right-0>div {
+    background-color: #f6f5f2 !important;
+    border-color: #dedcd5 !important;
+    color: #09090b !important;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .fixed.inset-y-0.right-0 .bg-zinc-900 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+  }
+
+  .fixed.inset-y-0.right-0 .border-zinc-800 {
+    border-color: #dedcd5 !important;
+  }
+
+  /* Cart Drawer Checkout Button (#9A0000 with Pure White Text) */
+  .fixed.inset-y-0.right-0 a.cart-checkout-btn,
+  .fixed.inset-y-0.right-0 a.cart-checkout-btn * {
+    background-color: #9A0000 !important;
+    color: #ffffff !important;
+    border-color: #9A0000 !important;
+  }
+
+  .fixed.inset-y-0.right-0 a.cart-checkout-btn:hover {
+    background-color: #7a0000 !important;
+    color: #ffffff !important;
+  }
+
+  /* Free Shipping Bar */
+  .p-3\.5.rounded-xl.bg-zinc-900 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .p-3\.5.rounded-xl.bg-zinc-900 .bg-zinc-800 {
+    background-color: #eeede9 !important;
+  }
+
+  /* Size Chart Modal */
+  .max-w-xl.bg-zinc-950 {
+    background-color: #f6f5f2 !important;
+    border-color: #dedcd5 !important;
+    color: #09090b !important;
+  }
+
+  .max-w-xl table th {
+    background-color: #eeede9 !important;
+    color: #09090b !important;
+    border-color: #dedcd5 !important;
+  }
+
+  .max-w-xl table td {
+    background-color: #ffffff !important;
+    color: #27272a !important;
+    border-color: #dedcd5 !important;
+  }
+
+  .max-w-xl .bg-zinc-900 {
+    background-color: #eeede9 !important;
+    border-color: #dedcd5 !important;
+  }
+
+  /* Value Props 3-Column Grid */
+  section .rounded-2xl.bg-zinc-900\/50 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  section .rounded-2xl.bg-zinc-900\/50 .bg-zinc-800 {
+    background-color: #f6f5f2 !important;
+    color: #9A0000 !important;
+    border: 1px solid #dedcd5 !important;
+  }
+
+  /* Promotional Banner (Flat 10% Off) */
+  section .rounded-2xl.bg-zinc-900 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  strong.bg-zinc-800 {
+    background-color: #eeede9 !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+  }
+
+  /* FAQ Accordion Cards */
+  .p-5.rounded-2xl.bg-zinc-900 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .p-5.rounded-2xl.bg-zinc-900 .bg-zinc-800 {
+    background-color: #eeede9 !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+  }
+
+  /* PDP Size Selector Buttons */
+  .grid-cols-5 button.bg-zinc-900 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    color: #09090b !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .grid-cols-5 button.bg-zinc-900:hover {
+    background-color: #eeede9 !important;
+    border-color: #b8b6ad !important;
+  }
+
+  .grid-cols-5 button.bg-zinc-950 {
+    background-color: #e5e3dc !important;
+    border-color: #dedcd5 !important;
+    color: #8c8a84 !important;
+    cursor: not-allowed !important;
+  }
+
+  /* PDP Pincode Delivery Box & Trust Boxes */
+  .p-4.rounded-xl.bg-zinc-900\/60,
+  .grid-cols-2 .bg-zinc-900\/40 {
+    background-color: #ffffff !important;
+    border-color: #dedcd5 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  /* Footer & Newsletter */
+  footer {
+    background-color: #ebe9e4 !important;
+    border-top: 1px solid #dedcd5 !important;
+    color: #27272a !important;
+  }
+
+  footer .bg-zinc-900\/50 {
+    background-color: #ffffff !important;
+    border: 1px solid #dedcd5 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  footer .border-zinc-800,
+  footer .border-zinc-900 {
+    border-color: #dedcd5 !important;
+  }
+
+  footer h3,
+  footer h4 {
+    color: #09090b !important;
+    font-weight: 800 !important;
+  }
+
+  footer a {
+    color: #3f3e3b !important;
+    font-weight: 600 !important;
+  }
+
+  footer a:hover {
+    color: #9A0000 !important;
+  }
+
+  /* Theme Toggle Pill in Footer */
+  div[aria-label="Theme mode switcher"] {
+    background-color: #dedcd5 !important;
+    border-color: #c9c7bf !important;
+  }
+
+  /* ==================== HOMEPAGE HERO BANNER (LIGHT THEME) ==================== */
+  section.relative.min-h-\[85vh\] {
+    background-color: #f6f5f2 !important;
+    border-color: #dedcd5 !important;
+  }
+
+  /* Editorial backdrop image - Balanced luxury visibility in light theme */
+  section.relative.min-h-\[85vh\] img {
+    opacity: 0.45 !important;
+    filter: contrast(1.08) saturate(1.02) !important;
+  }
+
+  /* Transparent glassy gradient overlay */
+  section.relative.min-h-\[85vh\] .bg-gradient-to-t {
+    background: linear-gradient(to top,
+        rgba(246, 245, 242, 0.92) 0%,
+        rgba(246, 245, 242, 0.45) 45%,
+        rgba(246, 245, 242, 0.15) 85%,
+        rgba(246, 245, 242, 0.25) 100%) !important;
+    backdrop-filter: blur(1.5px) !important;
+    -webkit-backdrop-filter: blur(1.5px) !important;
+  }
+
+  /* Hero Drop Badge Pill */
+  section.relative.min-h-\[85vh\] .bg-accent,
+  section.relative.min-h-\[85vh\] .bg-accent\/20,
+  section.relative.min-h-\[85vh\] .bg-red-950\/90,
+  section.relative.min-h-\[85vh\] [class*="bg-[#9A0000]"],
+  section.relative.min-h-\[85vh\] [class*="bg-[#9a0000]"] {
+    background-color: #9A0000 !important;
+    border-color: #9A0000 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 8px rgba(154, 0, 0, 0.35) !important;
+  }
+
+  section.relative.min-h-\[85vh\] .bg-accent *,
+  section.relative.min-h-\[85vh\] .bg-accent\/20 *,
+  section.relative.min-h-\[85vh\] .bg-red-950\/90 *,
+  section.relative.min-h-\[85vh\] [class*="bg-[#9A0000]"] *,
+  section.relative.min-h-\[85vh\] [class*="bg-[#9a0000]"] * {
+    color: #ffffff !important;
+  }
+
+  /* Hero Headline */
+  section.relative.min-h-\[85vh\] h1 {
+    color: #09090b !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  /* Hero Subheadline */
+  section.relative.min-h-\[85vh\] p {
+    color: #27272a !important;
+    font-weight: 500 !important;
+  }
+
+  /* Primary CTA Button */
+  section.relative.min-h-\[85vh\] a.bg-white {
+    background-color: #09090b !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  section.relative.min-h-\[85vh\] a.bg-white * {
+    color: #ffffff !important;
+  }
+
+  section.relative.min-h-\[85vh\] a.bg-white:hover {
+    background-color: #27272a !important;
+  }
+
+  /* Secondary CTA Button */
+  section.relative.min-h-\[85vh\] a.bg-zinc-900\/80 {
+    background-color: #ffffff !important;
+    color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+    font-weight: 700 !important;
+  }
+
+  section.relative.min-h-\[85vh\] a.bg-zinc-900\/80:hover {
+    background-color: #eeede9 !important;
+    border-color: #b8b6ad !important;
+  }
+
+  /* Quick Garment Highlights Pills */
+  section.relative.min-h-\[85vh\] .pt-6 span {
+    background-color: rgba(255, 255, 255, 0.88) !important;
+    border: 1px solid #dedcd5 !important;
+    color: #27272a !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  /* ==================== FEATURED COLLECTIONS CARDS (LIGHT THEME) ==================== */
+  .collection-card {
+    background-color: #121214 !important;
+    border: 1px solid #dedcd5 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .collection-card img {
+    opacity: 0.85 !important;
+  }
+
+  .collection-card .bg-gradient-to-t {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 45%, rgba(0, 0, 0, 0) 100%) !important;
+  }
+
+  .collection-card h3,
+  .collection-card h3 *,
+  .collection-card h2,
+  .collection-card h2 *,
+  .collection-card .text-white {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  .collection-card p,
+  .collection-card p *,
+  .collection-card .text-zinc-200,
+  .collection-card .text-zinc-300,
+  .collection-card .text-zinc-400 {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .collection-card span[class*="bg-[#9A0000]"],
+  .collection-card span[class*="bg-[#9A0000]"] * {
+    color: #ffffff !important;
+    background-color: #9A0000 !important;
+  }
+
+  /* ==================== PROMO BANNER CARDS (LIGHT THEME) ==================== */
+  .promo-banner-card {
+    background-color: #09090b !important;
+    border: 1px solid #dedcd5 !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .promo-banner-card .bg-gradient-to-r {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.2) 100%) !important;
+  }
+
+  .promo-banner-card h3,
+  .promo-banner-card h3 *,
+  .promo-banner-card .text-white {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  .promo-banner-card p,
+  .promo-banner-card p *,
+  .promo-banner-card .text-zinc-200,
+  .promo-banner-card .text-zinc-300,
+  .promo-banner-card .text-zinc-400 {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .promo-banner-card span[class*="bg-[#9A0000]"],
+  .promo-banner-card span[class*="bg-[#9A0000]"] * {
+    background-color: #9A0000 !important;
+    color: #ffffff !important;
+  }
+
+  .promo-banner-card a.promo-cta-btn,
+  .promo-banner-card a.promo-cta-btn * {
+    background-color: #ffffff !important;
+    color: #09090b !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .promo-banner-card a.promo-cta-btn:hover {
+    background-color: #f4f4f5 !important;
+    color: #09090b !important;
+  }
+
+  /* Scrollbars in Light Mode */
+  ::-webkit-scrollbar-track {
+    background: #f6f5f2;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #dedcd5;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c9c7bf;
+  }
+}
+
+/* Cash On Delivery Checkout Button: White Button with Black Text in Dark Theme */
+html.dark .btn-cod-cta,
+html.dark .btn-cod-cta *,
+html.dark button.btn-cod-cta,
+html.dark button.btn-cod-cta * {
+  background-color: #ffffff !important;
+  color: #09090b !important;
+  border-color: #ffffff !important;
+}
+
+html.dark .btn-cod-cta:hover,
+html.dark button.btn-cod-cta:hover {
+  background-color: #e4e4e7 !important;
+  color: #09090b !important;
+}
+
+/* Custom modern scrollbars (Dark Mode default) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -106,4 +1001,349 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
+}
+
+/* ==========================================================================
+   SEPARATE ADMIN DASHBOARD THEME STYLING
+   ========================================================================== */
+
+/* 1. Admin Light Theme Scope */
+.admin-root.light,
+[data-admin-theme="light"] .admin-root {
+  background-color: #f6f5f2 !important;
+  color: #111827 !important;
+}
+
+.admin-root.light aside,
+[data-admin-theme="light"] aside {
+  background-color: #ffffff !important;
+  border-color: #dedcd5 !important;
+}
+
+.admin-root.light aside a,
+[data-admin-theme="light"] aside a {
+  color: #4b5563 !important;
+}
+
+.admin-root.light aside a:hover,
+[data-admin-theme="light"] aside a:hover {
+  background-color: #eeede9 !important;
+  color: #111827 !important;
+}
+
+.admin-root.light aside a.bg-accent,
+[data-admin-theme="light"] aside a.bg-accent {
+  background-color: #9A0000 !important;
+  color: #ffffff !important;
+}
+
+.admin-root.light aside a.bg-accent * {
+  color: #ffffff !important;
+}
+
+.admin-root.light header,
+[data-admin-theme="light"] header {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-color: #dedcd5 !important;
+}
+
+.admin-root.light header input,
+[data-admin-theme="light"] header input {
+  background-color: #f6f5f2 !important;
+  border-color: #dedcd5 !important;
+  color: #111827 !important;
+}
+
+.admin-root.light .bg-zinc-900,
+.admin-root.light .bg-zinc-900\/40,
+.admin-root.light .bg-zinc-900\/50,
+.admin-root.light .bg-zinc-900\/60,
+.admin-root.light .bg-zinc-900\/80,
+.admin-root.light .bg-zinc-900\/90 {
+  background-color: #ffffff !important;
+  border-color: #dedcd5 !important;
+}
+
+.admin-root.light .bg-zinc-950,
+.admin-root.light .bg-zinc-950\/50,
+.admin-root.light .bg-zinc-950\/60,
+.admin-root.light .bg-zinc-950\/80 {
+  background-color: #f6f5f2 !important;
+}
+
+.admin-root.light .bg-zinc-800,
+.admin-root.light .bg-zinc-800\/50,
+.admin-root.light .bg-zinc-800\/80 {
+  background-color: #eeede9 !important;
+  border-color: #dedcd5 !important;
+}
+
+.admin-root.light .border-zinc-800,
+.admin-root.light .border-zinc-800\/80,
+.admin-root.light .border-zinc-700,
+.admin-root.light .border-zinc-700\/50 {
+  border-color: #dedcd5 !important;
+}
+
+.admin-root.light .text-white {
+  color: #111827 !important;
+}
+
+.admin-root.light .text-zinc-100,
+.admin-root.light .text-zinc-200,
+.admin-root.light .text-zinc-300 {
+  color: #1f2937 !important;
+}
+
+.admin-root.light .text-zinc-400 {
+  color: #4b5563 !important;
+}
+
+.admin-root.light .text-zinc-500 {
+  color: #6b7280 !important;
+}
+
+.admin-root.light input,
+.admin-root.light select,
+.admin-root.light textarea {
+  background-color: #ffffff !important;
+  border-color: #dedcd5 !important;
+  color: #111827 !important;
+}
+
+.admin-root.light table th {
+  background-color: #eeede9 !important;
+  color: #374151 !important;
+}
+
+.admin-root.light table td {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border-color: #dedcd5 !important;
+}
+
+.admin-root.light table tr:hover td {
+  background-color: #f6f5f2 !important;
+}
+
+.admin-root.light .bg-white.text-black {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+}
+
+.admin-root.light .bg-accent,
+.admin-root.light .bg-accent * {
+  color: #ffffff !important;
+}
+
+/* 2. Admin Dark Theme Scope (Independent from Storefront Theme) */
+.admin-root.dark,
+[data-admin-theme="dark"] .admin-root {
+  background-color: #09090b !important;
+  color: #f4f4f5 !important;
+}
+
+.admin-root.dark aside,
+[data-admin-theme="dark"] aside {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+}
+
+.admin-root.dark aside a,
+[data-admin-theme="dark"] aside a {
+  color: #a1a1aa !important;
+}
+
+.admin-root.dark aside a:hover,
+[data-admin-theme="dark"] aside a:hover {
+  background-color: #18181b !important;
+  color: #ffffff !important;
+}
+
+.admin-root.dark header,
+[data-admin-theme="dark"] header {
+  background-color: rgba(9, 9, 11, 0.85) !important;
+  border-color: rgba(39, 39, 42, 0.8) !important;
+}
+
+.admin-root.dark header input,
+[data-admin-theme="dark"] header input {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+.admin-root.dark .bg-zinc-900,
+.admin-root.dark .bg-zinc-900\/40,
+.admin-root.dark .bg-zinc-900\/50,
+.admin-root.dark .bg-zinc-900\/60,
+.admin-root.dark .bg-zinc-900\/80,
+.admin-root.dark .bg-zinc-900\/90 {
+  background-color: #121215 !important;
+  border-color: #27272a !important;
+}
+
+.admin-root.dark .bg-zinc-950,
+.admin-root.dark .bg-zinc-950\/50,
+.admin-root.dark .bg-zinc-950\/60,
+.admin-root.dark .bg-zinc-950\/80 {
+  background-color: #09090b !important;
+}
+
+.admin-root.dark .bg-zinc-800,
+.admin-root.dark .bg-zinc-800\/50,
+.admin-root.dark .bg-zinc-800\/80 {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+.admin-root.dark .border-zinc-800,
+.admin-root.dark .border-zinc-800\/80,
+.admin-root.dark .border-zinc-700,
+.admin-root.dark .border-zinc-700\/50 {
+  border-color: #27272a !important;
+}
+
+.admin-root.dark .text-white {
+  color: #ffffff !important;
+}
+
+.admin-root.dark .text-zinc-100,
+.admin-root.dark .text-zinc-200,
+.admin-root.dark .text-zinc-300 {
+  color: #d4d4d8 !important;
+}
+
+.admin-root.dark .text-zinc-400 {
+  color: #a1a1aa !important;
+}
+
+.admin-root.dark .text-zinc-500 {
+  color: #71717a !important;
+}
+
+.admin-root.dark input,
+.admin-root.dark select,
+.admin-root.dark textarea {
+  background-color: #121215 !important;
+  border-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+.admin-root.dark table th {
+  background-color: #18181b !important;
+  color: #a1a1aa !important;
+}
+
+.admin-root.dark table td {
+  background-color: #121215 !important;
+  color: #f4f4f5 !important;
+  border-color: #27272a !important;
+}
+
+.admin-root.dark table tr:hover td {
+  background-color: #18181b !important;
+}
+
+.admin-root.dark .bg-white.text-black {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.admin-root.dark .bg-accent,
+.admin-root.dark .bg-accent * {
+  color: #ffffff !important;
+}
+
+/* Storefront Announcement Bar (#9A0000) */
+header .bg-\[\#9A0000\],
+header a.bg-\[\#9A0000\],
+.announcement-bar {
+  background-color: #9A0000 !important;
+  color: #ffffff !important;
+}
+
+header a.bg-\[\#9A0000\]:hover {
+  background-color: #7a0000 !important;
+}
+
+/* ==============================================================================
+ * LUXURY ORDER SUCCESS CHECKMARK DRAWING ANIMATION
+ * ============================================================================== */
+@keyframes success-circle-draw {
+  0% {
+    stroke-dashoffset: 160;
+    transform: rotate(-90deg) scale(0.85);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    transform: rotate(-90deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes success-check-draw {
+  0% {
+    stroke-dashoffset: 50;
+    opacity: 0;
+  }
+  40% {
+    stroke-dashoffset: 50;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes success-glow-pulse {
+  0%, 100% {
+    transform: scale(0.92);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.75;
+  }
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0.65);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-success-pop {
+  animation: success-pop 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-success-circle {
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+  transform-origin: center;
+  animation: success-circle-draw 0.85s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.animate-success-check {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: success-check-draw 0.95s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.animate-success-glow {
+  animation: success-glow-pulse 3s ease-in-out infinite;
 }

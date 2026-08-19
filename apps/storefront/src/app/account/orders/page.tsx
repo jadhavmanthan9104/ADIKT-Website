@@ -4,9 +4,10 @@ import React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useCustomer } from "@/components/providers/CustomerContext"
-import { ArrowLeft, Truck, Package, User } from "@/components/ui/Icons"
+import { ArrowLeft, Truck, Package, User, ExternalLink } from "@/components/ui/Icons"
 import { formatPrice, formatDate } from "@/lib/formatters"
 import { EmptyState } from "@/components/ui/EmptyState"
+import { getCarrierTrackingPortalUrl } from "@/lib/shipping/shipping-service"
 
 export default function OrdersHistoryPage() {
   const { customer, orders, isLoaded } = useCustomer()
@@ -85,22 +86,46 @@ export default function OrdersHistoryPage() {
               </div>
 
               {/* Logistics & Tracking Bar */}
+              {(() => {
+                const assignedCourier = order.awb ? order.courier : ""
+
+                return (
               <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2 text-zinc-300">
                   <Truck className="h-4 w-4 text-accent shrink-0" />
                   <span>
-                    Carrier: <strong className="text-white">{order.courier}</strong> (AWB:{" "}
-                    <span className="font-mono text-white">{order.awb}</span>)
+                    Carrier:{" "}
+                    <strong className="text-white">{assignedCourier || "Not assigned yet"}</strong>
+                    {order.awb ? (
+                      <>
+                        {" "}(AWB: <span className="font-mono text-white">{order.awb}</span>)
+                      </>
+                    ) : null}
                   </span>
                 </div>
 
-                <Link
-                  href={`/account/orders/${order.id}`}
-                  className="inline-flex items-center gap-1 text-accent hover:underline font-bold text-xs"
-                >
-                  View Order Timeline & Invoice
-                </Link>
+                <div className="flex items-center gap-3">
+                  {assignedCourier ? (
+                    <a
+                      href={getCarrierTrackingPortalUrl(assignedCourier, order.awb)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 bg-[#9A0000] hover:bg-[#7a0000] text-white px-2.5 py-1 rounded-lg font-black text-[10px] uppercase transition-colors"
+                    >
+                      <span>Track Here</span>
+                      <ExternalLink className="h-2.5 w-2.5" />
+                    </a>
+                  ) : null}
+                  <Link
+                    href={`/account/orders/${order.id}`}
+                    className="inline-flex items-center gap-1 text-accent hover:underline font-bold text-xs"
+                  >
+                    View Timeline →
+                  </Link>
+                </div>
               </div>
+                )
+              })()}
             </div>
           ))}
         </div>

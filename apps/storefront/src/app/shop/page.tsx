@@ -1,12 +1,14 @@
 "use client"
 
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { ProductCard } from "@/components/product/ProductCard"
 import { SlidersHorizontal, Search, X } from "@/components/ui/Icons"
 import { EmptyState } from "@/components/ui/EmptyState"
-import { STORE_PRODUCTS, StoreProduct } from "@/lib/store-api"
+import { StoreProduct } from "@/lib/store-api"
+import { productStore } from "@/lib/product-store"
 
 export default function ShopPage() {
+  const [products, setProducts] = useState<StoreProduct[]>(() => productStore.getAllStoreProducts())
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [selectedGsm, setSelectedGsm] = useState<number | "all">("all")
   const [selectedSize, setSelectedSize] = useState<string>("all")
@@ -17,8 +19,27 @@ export default function ShopPage() {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false)
   const [displayCount, setDisplayCount] = useState<number>(12)
 
+  useEffect(() => {
+    // 1. Subscribe to in-memory store changes
+    const unsubscribe = productStore.subscribe(() => {
+      setProducts(productStore.getAllStoreProducts())
+    })
+
+    // 2. Fetch latest persisted catalog from server
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.storeProducts?.length > 0) {
+          setProducts(data.storeProducts)
+        }
+      })
+      .catch(() => {})
+
+    return unsubscribe
+  }, [])
+
   const filteredProducts = useMemo(() => {
-    return STORE_PRODUCTS.filter((product) => {
+    return products.filter((product) => {
       if (selectedCategory !== "all" && product.category !== selectedCategory) return false
       if (selectedGsm !== "all" && product.gsm !== selectedGsm) return false
       if (selectedSize !== "all" && !product.sizes.some((s) => s.size === selectedSize && s.inStock)) {
@@ -40,7 +61,7 @@ export default function ShopPage() {
       if (sortBy === "newest") return (b.isNewArrival ? 1 : 0) - (a.isNewArrival ? 1 : 0)
       return 0
     })
-  }, [selectedCategory, selectedGsm, selectedSize, maxPrice, inStockOnly, sortBy, searchQuery])
+  }, [products, selectedCategory, selectedGsm, selectedSize, maxPrice, inStockOnly, sortBy, searchQuery])
 
   const visibleProducts = filteredProducts.slice(0, displayCount)
   const hasMore = displayCount < filteredProducts.length
@@ -68,7 +89,7 @@ export default function ShopPage() {
       {/* Title & Search Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-accent">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-[#9A0000]">
             Master Archive
           </span>
           <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-white font-display mt-0.5">
@@ -87,7 +108,7 @@ export default function ShopPage() {
             placeholder="Search by fabric, fit, GSM, or color..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-9 pr-4 py-2.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-accent"
+            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-9 pr-4 py-2.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#9A0000]"
           />
         </div>
       </div>
@@ -98,12 +119,12 @@ export default function ShopPage() {
         <aside className="hidden lg:block lg:col-span-3 space-y-6 p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 self-start sticky top-24">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-accent" /> Filter Silhouettes
+              <SlidersHorizontal className="h-4 w-4 text-[#9A0000]" /> Filter Silhouettes
             </h3>
             {isFiltered && (
               <button
                 onClick={resetFilters}
-                className="text-[11px] font-bold text-accent hover:underline uppercase"
+                className="text-[11px] font-bold text-[#9A0000] hover:underline uppercase"
               >
                 Reset All
               </button>
@@ -126,7 +147,7 @@ export default function ShopPage() {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex justify-between items-center ${
                     selectedCategory === cat.id
-                      ? "bg-accent text-white font-bold"
+                      ? "bg-[#9A0000] text-white font-bold shadow-sm"
                       : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
                   }`}
                 >
@@ -152,7 +173,7 @@ export default function ShopPage() {
                   onClick={() => setSelectedGsm(item.gsm)}
                   className={`py-1.5 px-2 rounded-md text-xs font-bold uppercase border transition-colors ${
                     selectedGsm === item.gsm
-                      ? "border-accent bg-accent/20 text-white"
+                      ? "border-[#9A0000] bg-[#9A0000] text-white shadow-sm"
                       : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -172,7 +193,7 @@ export default function ShopPage() {
                   onClick={() => setSelectedSize(sz)}
                   className={`py-1.5 rounded text-xs font-bold uppercase border transition-colors ${
                     selectedSize === sz
-                      ? "border-accent bg-accent text-white"
+                      ? "border-[#9A0000] bg-[#9A0000] text-white shadow-sm"
                       : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -216,26 +237,26 @@ export default function ShopPage() {
 
         {/* Right Content Area (Catalog Grid) */}
         <div className="lg:col-span-9 space-y-6">
-          {/* Top Bar: Sort + Mobile Filter Toggle */}
-          <div className="flex items-center justify-between gap-4 bg-zinc-900/30 p-3 rounded-xl border border-zinc-800/60">
+          {/* Top Bar: Sort + Mobile Filter Toggle (Clean Minimal Layout Without Outer Box or White Fill) */}
+          <div className="flex items-center justify-between gap-4 pb-2">
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-xs font-bold uppercase"
+              className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-white rounded-lg text-xs font-bold uppercase transition-colors"
             >
-              <SlidersHorizontal className="h-3.5 w-3.5 text-accent" /> Filters {isFiltered ? "(Active)" : ""}
+              <SlidersHorizontal className="h-3.5 w-3.5 text-[#9A0000]" /> Filters {isFiltered ? "(Active)" : ""}
             </button>
 
             <div className="flex items-center gap-2 ml-auto">
-              <span className="text-xs text-zinc-400 hidden sm:inline">Sort By:</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold uppercase tracking-wider hidden sm:inline">Sort By:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-accent"
+                className="bg-transparent border border-zinc-300 dark:border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#9A0000] font-bold cursor-pointer transition-colors"
               >
-                <option value="featured">Featured Drop</option>
-                <option value="newest">Newest Releases</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
+                <option value="featured" className="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-white">Featured Drop</option>
+                <option value="newest" className="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-white">Newest Releases</option>
+                <option value="price_asc" className="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-white">Price: Low to High</option>
+                <option value="price_desc" className="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-white">Price: High to Low</option>
               </select>
             </div>
           </div>
@@ -301,7 +322,7 @@ export default function ShopPage() {
                         onClick={() => setSelectedCategory(cat)}
                         className={`py-2 px-3 rounded text-xs font-bold uppercase border text-center ${
                           selectedCategory === cat
-                            ? "bg-accent text-white border-accent"
+                            ? "bg-[#9A0000] text-white border-[#9A0000] shadow-sm"
                             : "bg-zinc-900 border-zinc-800 text-zinc-400"
                         }`}
                       >
@@ -321,7 +342,7 @@ export default function ShopPage() {
                         onClick={() => setSelectedGsm(g as any)}
                         className={`py-2 px-3 rounded text-xs font-bold uppercase border text-center ${
                           selectedGsm === g
-                            ? "bg-accent text-white border-accent"
+                            ? "bg-[#9A0000] text-white border-[#9A0000] shadow-sm"
                             : "bg-zinc-900 border-zinc-800 text-zinc-400"
                         }`}
                       >

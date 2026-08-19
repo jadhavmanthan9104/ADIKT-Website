@@ -31,5 +31,32 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/content-cms",
     },
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/payment-razorpay",
+            id: "razorpay",
+            options: {
+              key_id: process.env.RAZORPAY_KEY_ID,
+              key_secret: process.env.RAZORPAY_KEY_SECRET,
+              webhook_secret: process.env.RAZORPAY_WEBHOOK_SECRET,
+            },
+          },
+        ],
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/fulfillment",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/fulfillment-shiprocket",
+            id: "shiprocket",
+          },
+        ],
+      },
+    },
   ],
 })

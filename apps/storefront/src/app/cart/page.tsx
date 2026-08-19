@@ -14,6 +14,7 @@ export default function CartPage() {
     items,
     subtotal,
     discount,
+    tax,
     shipping,
     total,
     itemCount,
@@ -26,6 +27,19 @@ export default function CartPage() {
   } = useCart()
 
   const [inputCode, setInputCode] = useState("")
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
+
+  const handleDeleteItem = (id: string) => {
+    setDeletingIds((prev) => new Set(prev).add(id))
+    setTimeout(() => {
+      removeItem(id)
+      setDeletingIds((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
+    }, 320)
+  }
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,58 +70,80 @@ export default function CartPage() {
             <FreeShippingBar />
 
             <div className="divide-y divide-zinc-800 border-y border-zinc-800">
-              {items.map((item) => (
-                <div key={item.id} className="py-6 flex gap-4 sm:gap-6 items-center">
-                  {/* Thumbnail */}
-                  <Link
-                    href={`/products/${item.handle}`}
-                    className="relative aspect-[3/4] w-20 sm:w-24 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 shrink-0"
+              {items.map((item) => {
+                const isDeleting = deletingIds.has(item.id)
+
+                return (
+                  <div
+                    key={item.id}
+                    style={{
+                      maxHeight: isDeleting ? "0px" : "200px",
+                      opacity: isDeleting ? 0 : 1,
+                      transform: isDeleting ? "translateX(40px) scale(0.95)" : "translateX(0) scale(1)",
+                      paddingTop: isDeleting ? "0px" : "1.5rem",
+                      paddingBottom: isDeleting ? "0px" : "1.5rem",
+                      marginTop: isDeleting ? "0px" : undefined,
+                      marginBottom: isDeleting ? "0px" : undefined,
+                    }}
+                    className="flex gap-4 sm:gap-6 items-center transition-all duration-300 ease-in-out overflow-hidden"
                   >
-                    <Image src={item.thumbnail} alt={item.title} fill className="object-cover" />
-                  </Link>
-
-                  {/* Details */}
-                  <div className="flex-1 min-w-0 space-y-1">
-                    <Link href={`/products/${item.handle}`}>
-                      <h3 className="text-sm sm:text-base font-bold text-white hover:text-accent transition-colors truncate">
-                        {item.title}
-                      </h3>
+                    {/* Thumbnail */}
+                    <Link
+                      href={`/products/${item.handle}`}
+                      className="relative aspect-[3/4] w-20 sm:w-24 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 shrink-0"
+                    >
+                      <Image src={item.thumbnail} alt={item.title} fill className="object-cover" />
                     </Link>
-                    <p className="text-xs text-zinc-400">
-                      Size: <strong className="text-white">{item.size}</strong> • Color:{" "}
-                      <strong className="text-white">{item.color}</strong>
-                    </p>
-                    <p className="text-sm font-bold text-white sm:hidden">{formatPrice(item.price)}</p>
 
-                    {/* Quantity & Delete Controls */}
-                    <div className="flex items-center gap-4 pt-2">
-                      <div className="inline-flex items-center border border-zinc-800 rounded-lg bg-zinc-900">
+                    {/* Details */}
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <Link href={`/products/${item.handle}`}>
+                        <h3 className="text-sm sm:text-base font-bold text-white hover:text-accent transition-colors truncate">
+                          {item.title}
+                        </h3>
+                      </Link>
+                      <p className="text-xs text-zinc-400">
+                        Size: <strong className="text-white">{item.size}</strong> • Color:{" "}
+                        <strong className="text-white">{item.color}</strong>
+                      </p>
+                      <p className="text-sm font-bold text-white sm:hidden">{formatPrice(item.price)}</p>
+
+                      {/* Quantity & Delete Controls */}
+                      <div className="flex items-center gap-4 pt-2">
+                        <div className="inline-flex items-center border border-zinc-800 rounded-lg bg-zinc-900">
+                          <button
+                            onClick={() => {
+                              if (item.quantity <= 1) {
+                                handleDeleteItem(item.id)
+                              } else {
+                                updateQuantity(item.id, -1)
+                              }
+                            }}
+                            className="p-1.5 text-zinc-400 hover:text-white transition-colors"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="h-3.5 w-3.5" />
+                          </button>
+                          <span className="px-3 text-xs font-bold text-white">{item.quantity}</span>
+                          <button
+                            onClick={() => updateQuantity(item.id, 1)}
+                            className="p-1.5 text-zinc-400 hover:text-white transition-colors"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+
                         <button
-                          onClick={() => updateQuantity(item.id, -1)}
-                          className="p-1.5 text-zinc-400 hover:text-white"
-                          aria-label="Decrease quantity"
+                          onClick={() => handleDeleteItem(item.id)}
+                          disabled={isDeleting}
+                          className="text-zinc-500 hover:text-red-400 hover:bg-red-500/10 p-1.5 rounded-lg transition-all active:scale-90"
+                          aria-label="Remove item"
                         >
-                          <Minus className="h-3.5 w-3.5" />
-                        </button>
-                        <span className="px-3 text-xs font-bold text-white">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.id, 1)}
-                          className="p-1.5 text-zinc-400 hover:text-white"
-                          aria-label="Increase quantity"
-                        >
-                          <Plus className="h-3.5 w-3.5" />
+                          <Trash2 className={`h-4 w-4 ${isDeleting ? "text-red-500 animate-spin" : ""}`} />
                         </button>
                       </div>
-
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="text-zinc-500 hover:text-accent transition-colors p-1"
-                        aria-label="Remove item"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
                     </div>
-                  </div>
 
                   {/* Desktop Price */}
                   <div className="hidden sm:block text-right shrink-0">
@@ -117,7 +153,8 @@ export default function CartPage() {
                     <p className="text-xs text-zinc-500">{formatPrice(item.price)} each</p>
                   </div>
                 </div>
-              ))}
+              )
+            })}
             </div>
           </div>
 
@@ -143,7 +180,7 @@ export default function CartPage() {
                   </div>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-xs font-bold uppercase shrink-0"
+                    className="px-4 py-2 bg-[#9A0000] hover:bg-[#7a0000] text-white rounded-lg text-xs font-bold uppercase shrink-0 transition-colors shadow-sm"
                   >
                     Apply
                   </button>
@@ -184,7 +221,9 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between text-zinc-400">
                   <span>GST / Tax</span>
-                  <span className="text-white font-medium">Included</span>
+                  <span className="text-white font-medium">
+                    {tax > 0 ? `+${formatPrice(tax)}` : "Included in MRP"}
+                  </span>
                 </div>
                 <div className="flex justify-between text-base font-bold text-white border-t border-zinc-800 pt-3">
                   <span>Total Amount</span>
@@ -195,7 +234,7 @@ export default function CartPage() {
               {/* Checkout Button */}
               <Link
                 href="/checkout"
-                className="w-full py-4 rounded-xl bg-white hover:bg-zinc-200 text-black font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 transition-transform active:scale-[0.99] shadow-xl shadow-white/5"
+                className="w-full py-4 rounded-xl bg-[#9A0000] hover:bg-[#7a0000] text-white font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 transition-transform active:scale-[0.99] shadow-xl shadow-[#9A0000]/25"
               >
                 Proceed to Checkout <ArrowRight className="h-4 w-4" />
               </Link>

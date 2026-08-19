@@ -25,8 +25,8 @@ const config: Config = {
           950: "#0d0d0d", // Luxury deep black
         },
         accent: {
-          DEFAULT: "#e11d48", // Crimson Red accent
-          hover: "#be123c",
+          DEFAULT: "#9A0000", // Signature Deep Red accent
+          hover: "#7a0000",
         },
       },
       fontFamily: {
